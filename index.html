@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Lottie Gallery</title>
+	<style>
+		:root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#4f46e5}
+		body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:linear-gradient(180deg,#071024 0%, #081126 100%);color:#e6eef8}
+		.container{max-width:1100px;margin:28px auto;padding:18px}
+		header{display:flex;gap:12px;align-items:center;margin-bottom:18px}
+		h1{margin:0;font-size:20px}
+		.controls{margin-left:auto;display:flex;gap:8px;align-items:center}
+		input[type=search]{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:inherit;width:360px}
+		button{background:var(--card);color:inherit;border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px;cursor:pointer}
+		.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+		.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:10px}
+		.preview{height:180px;background:linear-gradient(90deg,rgba(255,255,255,0.01),rgba(255,255,255,0.02));border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+		.meta{font-size:13px;color:var(--muted);word-break:break-all}
+		.buttons{display:flex;gap:6px}
+		.pager{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:18px}
+		.small{font-size:12px;padding:6px 8px}
+		.count{color:var(--muted);font-size:13px}
+		.no-results{text-align:center;color:var(--muted);padding:24px}
+		.embedCode{width:100%;font-family:monospace;font-size:12px;padding:8px;border-radius:6px;background:rgba(0,0,0,0.25);color:#e6eef8;border:1px solid rgba(255,255,255,0.03)}
+		footer{margin-top:26px;color:var(--muted);font-size:13px;text-align:center}
+	</style>
+	<!-- Use CDNJS: ESM for modern browsers and nomodule UMD for legacy browsers -->
+	<script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/lottie-player/1.4.3/lottie-player.esm.min.js"></script>
+	<script nomodule src="https://cdnjs.cloudflare.com/ajax/libs/lottie-player/1.4.3/lottie-player.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<header>
+			<div>
+				<h1>Lottie Gallery</h1>
+				<div class="count" id="status">Loading…</div>
+			</div>
+			<div class="controls">
+				<input id="search" type="search" placeholder="Tìm kiếm page_id hoặc url..." />
+				<button id="reload">Reload</button>
+				<select id="perPage" title="Items per page">
+					<option value="12">12</option>
+					<option value="24">24</option>
+					<option value="48">48</option>
+				</select>
+			</div>
+		</header>
+
+		<main>
+			<div id="grid" class="grid"></div>
+			<div id="noResults" class="no-results" style="display:none">No results</div>
+			<div class="pager" id="pager"></div>
+		</main>
+
+		<footer>
+			Data source: <code>all_lottie_index.json</code> — Opened locally; for full preview the page may need network to load the lottie player and animations.
+		</footer>
+	</div>
+
+	<template id="cardTpl">
+		<article class="card">
+			<div class="preview">
+				<lottie-player
+					data-src
+					background="transparent"
+					speed="1"
+					style="width:100%;height:100%"
+					loop
+					autoplay>
+				</lottie-player>
+			</div>
+			<div class="meta" data-pageid></div>
+			<div class="meta" data-url></div>
+			<div class="buttons">
+				<button class="small copy">Copy URL</button>
+				<button class="small embed">Embed</button>
+				<button class="small download">Download</button>
+			</div>
+			<textarea class="embedCode" rows="2" readonly style="display:none"></textarea>
+		</article>
+	</template>
+
+	<script>
+		// Contract: load JSON mapping url -> { page_id }
+		// Inputs: all_lottie_index.json in same folder
+		// Output: gallery with pagination, search, copy/embed/download
+
+		const PATH_JSON = './all_lottie_index.json';
+		let items = []; // {url,page_id}
+		let filtered = [];
+		let page = 1;
+
+		const grid = document.getElementById('grid');
+		const status = document.getElementById('status');
+		const pager = document.getElementById('pager');
+		const search = document.getElementById('search');
+		const reloadBtn = document.getElementById('reload');
+		const perPageSel = document.getElementById('perPage');
+		const noResults = document.getElementById('noResults');
+
+		function formatCount() {
+			status.textContent = `${filtered.length} items — page ${page}/${Math.max(1, Math.ceil(filtered.length / perPage()))}`;
+		}
+
+		function perPage(){return Number(perPageSel.value)||12}
+
+		async function loadData(){
+			status.textContent = 'Loading…';
+			try{
+				const res = await fetch(PATH_JSON);
+				if(!res.ok) throw new Error(res.statusText);
+				const obj = await res.json();
+				items = Object.keys(obj).map(k=>({url:k,page_id:obj[k].page_id||''}));
+				filtered = items.slice();
+				page = 1;
+				render();
+			}catch(err){
+				status.textContent = 'Error loading JSON — open http server or check file presence';
+				console.error(err);
+			}
+		}
+
+		function render(){
+			grid.innerHTML = '';
+			const start = (page-1)*perPage();
+			const slice = filtered.slice(start, start+perPage());
+			if(slice.length===0){
+				noResults.style.display = 'block';
+			}else{
+				noResults.style.display = 'none';
+			}
+			const tpl = document.getElementById('cardTpl');
+			for(const it of slice){
+				const node = tpl.content.cloneNode(true);
+				const player = node.querySelector('lottie-player');
+				const pageidEl = node.querySelector('[data-pageid]');
+				const urlEl = node.querySelector('[data-url]');
+				const copyBtn = node.querySelector('.copy');
+				const embedBtn = node.querySelector('.embed');
+				const dlBtn = node.querySelector('.download');
+				const txt = node.querySelector('.embedCode');
+
+								// Load animation data via fetch(text) to avoid lottie-web XHR responseType issues
+								// Try to fetch as text and parse JSON, then provide to player via animationData (preferred)
+								// or blob URL. If fetch fails (CORS, network), fall back to setting the src attribute.
+								(async ()=>{
+									try{
+										const resp = await fetch(it.url);
+										const text = await resp.text();
+										const parsed = JSON.parse(text);
+										// Preferred: set animationData property if available on the element
+										if('animationData' in player){
+											try{ player.animationData = parsed; }catch(e){
+												// if direct assignment fails, fallback to blob URL
+												const blob = new Blob([JSON.stringify(parsed)], {type:'application/json'});
+												player.setAttribute('src', URL.createObjectURL(blob));
+											}
+										}else{
+											const blob = new Blob([JSON.stringify(parsed)], {type:'application/json'});
+											player.setAttribute('src', URL.createObjectURL(blob));
+										}
+									}catch(e){
+										// fallback: let the player load the remote URL directly (may still fail)
+										player.setAttribute('src', it.url);
+									}
+								})();
+				pageidEl.textContent = it.page_id || '(no page_id)';
+				urlEl.textContent = it.url;
+
+				copyBtn.addEventListener('click', ()=>{
+					navigator.clipboard.writeText(it.url).then(()=>{
+						copyBtn.textContent = 'Copied';
+						setTimeout(()=>copyBtn.textContent='Copy URL',900);
+					});
+				});
+
+				embedBtn.addEventListener('click', ()=>{
+					const iframe = `<iframe src="${it.url}" style="width:320px;height:320px;border:0" title="lottie"></iframe>`;
+					txt.style.display = '';
+					txt.value = iframe;
+					txt.select();
+					try{navigator.clipboard.writeText(iframe);}catch(e){}
+				});
+
+				dlBtn.addEventListener('click', ()=>{
+					// download raw .lottie url: same as url
+					const a = document.createElement('a');
+					a.href = it.url;
+					a.download = '';
+					document.body.appendChild(a);
+					a.click();
+					a.remove();
+				});
+
+				grid.appendChild(node);
+			}
+			renderPager();
+			formatCount();
+		}
+
+		function renderPager(){
+			pager.innerHTML = '';
+			const total = Math.max(1, Math.ceil(filtered.length / perPage()));
+			const createBtn = (txt,disabled,fn)=>{
+				const b = document.createElement('button'); b.textContent = txt; b.className='small'; if(disabled) b.disabled=true; b.addEventListener('click',fn); return b;
+			}
+			pager.appendChild(createBtn('Prev', page<=1, ()=>{ if(page>1){page--;render();} }));
+			const info = document.createElement('div'); info.className='count'; info.textContent = ` ${page} / ${total} `;
+			pager.appendChild(info);
+			pager.appendChild(createBtn('Next', page>=total, ()=>{ if(page<total){page++;render();} }));
+		}
+
+		function applySearch(){
+			const q = search.value.trim().toLowerCase();
+			if(!q){ filtered = items.slice(); page=1; render(); return; }
+			filtered = items.filter(i=> (i.page_id||'').toLowerCase().includes(q) || i.url.toLowerCase().includes(q) );
+			page = 1; render();
+		}
+
+		search.addEventListener('input', ()=>{ applySearch(); });
+		perPageSel.addEventListener('change', ()=>{ page=1; render(); });
+		reloadBtn.addEventListener('click', ()=>{ loadData(); });
+
+		// initial load
+		loadData();
+	</script>
+</body>
+</html>
+
