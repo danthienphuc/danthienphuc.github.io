@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lottie Gallery</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#94a3b8;--accent:#06b6d4}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071129 0,#081426 100%);color:#e6eef8;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    .wrap{max-width:1200px;margin:28px auto;padding:20px}
+    header{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    h1{font-size:20px;margin:0}
+    .controls{display:flex;gap:8px;align-items:center}
+    input[type=search]{padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;min-width:260px}
+    select,button{padding:10px 12px;border-radius:8px;border:0;background:var(--card);color:inherit}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:18px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:8px}
+    .player{height:180px;border-radius:8px;background:linear-gradient(180deg,#071429,#06121d);display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .meta{font-size:13px;color:var(--muted);word-break:break-word}
+    .btns{display:flex;gap:6px}
+    .btn{flex:1;padding:8px;border-radius:8px;background:#07172a;border:1px solid rgba(255,255,255,0.03);cursor:pointer;color:#cfeefb;font-size:13px}
+    .pager{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:18px}
+    .page-info{color:var(--muted)}
+    .embed-area{width:100%;padding:8px;border-radius:6px;background:#06121c;color:#bfeaf6;font-size:13px}
+    footer{margin-top:24px;color:var(--muted);font-size:13px;text-align:center}
+    @media (max-width:520px){.player{height:120px}}
+  </style>
+  <script src="https://unpkg.com/lottie-web@5.10.1/build/player/lottie.min.js"></script>
+  <!-- lottie-player web component for easy embed snippets -->
+  <script type="module" src="https://unpkg.com/@lottiefiles/lottie-player@1.6.1/dist/lottie-player.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Lottie Gallery</h1>
+      <div class="controls">
+        <input id="q" type="search" placeholder="Tìm kiếm page_id hoặc url..." />
+        <select id="perPage">
+          <option>12</option>
+          <option>24</option>
+          <option>48</option>
+        </select>
+        <button id="reload">Reload</button>
+      </div>
+    </header>
+
+    <div id="grid" class="grid" aria-live="polite"></div>
+
+    <div class="pager">
+      <button id="prev" class="btn">Prev</button>
+      <div class="page-info" id="pageInfo">0 items</div>
+      <button id="next" class="btn">Next</button>
+    </div>
+
+    <footer>Each card: preview (Lottie), three buttons: Copy (URL), Embed (iframe code), Download (raw .lottie URL). Below buttons shows original LottieFiles URL.</footer>
+  </div>
+
+  <template id="cardTpl">
+    <div class="card">
+      <div class="player" data-url=""></div>
+      <div class="meta name"></div>
+      <div class="btns">
+        <button class="btn copy">Copy</button>
+        <button class="btn embed">Embed</button>
+        <button class="btn download">Download</button>
+      </div>
+      <textarea class="embed-area" readonly hidden rows="3"></textarea>
+      <div class="meta link"></div>
+    </div>
+  </template>
+
+  <script>
+    // Contract: we load all JSON files under /links/*.json which are simple objects mapping lottieUrl -> {page_id}
+    // Build: items = [{url, page_id}]
+    // Controls: search q, perPage, pagination
+
+    const files = [
+      // Expand with the known files in links/ — relative URLs
+      'links/all_lottie_items_1_200.json',
+      'links/all_lottie_items_201_400.json',
+      'links/all_lottie_items_401_600.json',
+      'links/all_lottie_items_601_800.json',
+      'links/all_lottie_items_801_1000.json',
+      'links/all_lottie_items_1001_1200.json',
+      'links/all_lottie_items_1201_1400.json',
+      'links/all_lottie_items_1401_1600.json',
+      'links/all_lottie_items_1601_1800.json',
+      'links/all_lottie_items_1801_2000.json',
+      'links/all_lottie_items_2001_2200.json',
+      'links/all_lottie_items_2201_2400.json',
+      'links/all_lottie_items_2401_2600.json',
+      'links/all_lottie_items_2601_2800.json',
+      'links/all_lottie_items_2801_2853.json'
+    ];
+
+    let items = [];
+    let filtered = [];
+    let page = 1;
+
+    const qEl = document.getElementById('q');
+    const perPageEl = document.getElementById('perPage');
+    const grid = document.getElementById('grid');
+    const tpl = document.getElementById('cardTpl');
+    const pageInfo = document.getElementById('pageInfo');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const reload = document.getElementById('reload');
+
+    reload.addEventListener('click', loadAll);
+    qEl.addEventListener('input', ()=>{page=1;applyFilter()});
+    perPageEl.addEventListener('change', ()=>{page=1;render()});
+    prev.addEventListener('click', ()=>{if(page>1){page--;render()}});
+    next.addEventListener('click', ()=>{const pp=+perPageEl.value; if(page<Math.ceil(filtered.length/pp)){page++;render()}});
+
+    async function loadAll(){
+      items = [];
+      grid.innerHTML = '<div style="grid-column:1/-1;color:#94a3b8">Loading…</div>';
+      try{
+        const promises = files.map(f=>fetch(f).then(r=>r.ok? r.json():{}).catch(()=>({})))
+        const arr = await Promise.all(promises);
+        for(const obj of arr){
+          if(!obj || typeof obj !== 'object') continue;
+          for(const [url,v] of Object.entries(obj)){
+            items.push({url, page_id: (v && v.page_id) ? v.page_id : ''});
+          }
+        }
+      }catch(e){console.error(e)}
+      items.sort((a,b)=> (a.page_id||'').localeCompare(b.page_id||''));
+      applyFilter();
+    }
+
+    function applyFilter(){
+      const q = (qEl.value||'').trim().toLowerCase();
+      if(!q){filtered = items.slice()} else {
+        filtered = items.filter(it=> (it.page_id||'').toLowerCase().includes(q) || it.url.toLowerCase().includes(q))
+      }
+      render();
+    }
+
+    function render(){
+      grid.innerHTML = '';
+      const perPage = +perPageEl.value;
+      const total = filtered.length;
+      const totalPages = Math.max(1, Math.ceil(total / perPage));
+      if(page>totalPages) page = totalPages;
+      const start = (page-1)*perPage;
+      const slice = filtered.slice(start, start+perPage);
+
+      pageInfo.textContent = `${total} items — page ${page}/${totalPages}`;
+
+      for(const it of slice){
+        const node = tpl.content.cloneNode(true);
+        const playerEl = node.querySelector('.player');
+        const nameEl = node.querySelector('.meta.name');
+        const linkEl = node.querySelector('.meta.link');
+        const copyBtn = node.querySelector('.btn.copy');
+        const embedBtn = node.querySelector('.btn.embed');
+        const dlBtn = node.querySelector('.btn.download');
+        const embedArea = node.querySelector('.embed-area');
+
+        playerEl.dataset.url = it.url;
+        nameEl.textContent = it.page_id || '(no id)';
+        linkEl.innerHTML = `<a href="${it.url}" target="_blank" rel="noopener" style="color:#9be8f3">${it.url}</a>`;
+
+        // Load lottie animation into playerEl — using lottie-web player. Some URLs may not allow cross-origin fetch for preview.
+        try{
+          lottie.loadAnimation({
+            container: playerEl,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: it.url
+          });
+        }catch(e){
+          playerEl.textContent = 'Preview unavailable';
+        }
+
+        copyBtn.addEventListener('click', async ()=>{
+          const text = it.url;
+          await navigator.clipboard.writeText(text).then(()=>{
+            copyBtn.textContent = 'Copied'; setTimeout(()=>copyBtn.textContent='Copy',1200);
+          }).catch(()=>{alert('Copy failed')});
+        });
+
+        embedBtn.addEventListener('click', ()=>{
+          // Using lottie-player webcomponent for embed snippet
+          const code = `<lottie-player src=\"${it.url}\" background=\"transparent\" speed=\"1\" style=\"width:100%;height:100%\" loop autoplay></lottie-player>`;
+          // toggle
+          embedArea.hidden = !embedArea.hidden;
+          embedArea.value = code;
+          try{ embedArea.select(); }catch(e){}
+        });
+
+        dlBtn.addEventListener('click', ()=>{
+          // Trigger download by fetching and creating blob — may be blocked by CORS on remote host
+          fetch(it.url).then(r=>r.blob()).then(blob=>{
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            const filename = it.url.split('/').pop().split('?')[0] || 'animation.lottie';
+            a.download = filename;
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+          }).catch(err=>{
+            // fallback: open url in new tab so user can Save As
+            window.open(it.url, '_blank');
+          })
+        });
+
+        grid.appendChild(node);
+      }
+      // scroll top of grid
+      grid.scrollIntoView({behavior:'smooth'});
+    }
+
+    // Initial load
+    loadAll();
+  </script>
+</body>
+</html>
