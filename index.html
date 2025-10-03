@@ -24,10 +24,15 @@
 		.no-results{text-align:center;color:var(--muted);padding:24px}
 		.embedCode{width:100%;font-family:monospace;font-size:12px;padding:8px;border-radius:6px;background:rgba(0,0,0,0.25);color:#e6eef8;border:1px solid rgba(255,255,255,0.03)}
 		footer{margin-top:26px;color:var(--muted);font-size:13px;text-align:center}
+		.toast{position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:8px;color:#fff;font-size:14px;display:none;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+		.toast.success{background:#28a745}
+		.toast.error{background:#dc3545}
 	</style>
-	<!-- Use CDNJS: ESM for modern browsers and nomodule UMD for legacy browsers -->
-	<script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/lottie-player/1.4.3/lottie-player.esm.min.js"></script>
-	<script nomodule src="https://cdnjs.cloudflare.com/ajax/libs/lottie-player/1.4.3/lottie-player.min.js"></script>
+  
+  <!-- dotLottie player for .lottie packages -->
+  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.js"></script>
+  <!-- lottie-player web component for .json (LottieFiles player) -->
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -40,9 +45,10 @@
 				<input id="search" type="search" placeholder="Tìm kiếm page_id hoặc url..." />
 				<button id="reload">Reload</button>
 				<select id="perPage" title="Items per page">
-					<option value="12">12</option>
-					<option value="24">24</option>
-					<option value="48">48</option>
+					<option value="20">20</option>
+					<option value="50">50</option>
+					<option value="100">100</option>
+					<option value="200">200</option>
 				</select>
 			</div>
 		</header>
@@ -58,17 +64,12 @@
 		</footer>
 	</div>
 
+	<div class="toast" id="toast"></div>
+
 	<template id="cardTpl">
 		<article class="card">
-			<div class="preview">
-				<lottie-player
-					data-src
-					background="transparent"
-					speed="1"
-					style="width:100%;height:100%"
-					loop
-					autoplay>
-				</lottie-player>
+			<div class="preview" data-preview>
+				<!-- Player will be inserted here dynamically -->
 			</div>
 			<div class="meta" data-pageid></div>
 			<div class="meta" data-url></div>
@@ -77,7 +78,7 @@
 				<button class="small embed">Embed</button>
 				<button class="small download">Download</button>
 			</div>
-			<textarea class="embedCode" rows="2" readonly style="display:none"></textarea>
+			<textarea class="embedCode" rows="3" readonly style="display:none"></textarea>
 		</article>
 	</template>
 
@@ -98,6 +99,14 @@
 		const reloadBtn = document.getElementById('reload');
 		const perPageSel = document.getElementById('perPage');
 		const noResults = document.getElementById('noResults');
+		const toast = document.getElementById('toast');
+
+		function showToast(message, type = 'success') {
+			toast.textContent = message;
+			toast.className = `toast ${type}`;
+			toast.style.display = 'block';
+			setTimeout(() => { toast.style.display = 'none'; }, 3000);
+		}
 
 		function formatCount() {
 			status.textContent = `${filtered.length} items — page ${page}/${Math.max(1, Math.ceil(filtered.length / perPage()))}`;
@@ -133,7 +142,7 @@
 			const tpl = document.getElementById('cardTpl');
 			for(const it of slice){
 				const node = tpl.content.cloneNode(true);
-				const player = node.querySelector('lottie-player');
+				const previewEl = node.querySelector('[data-preview]');
 				const pageidEl = node.querySelector('[data-pageid]');
 				const urlEl = node.querySelector('[data-url]');
 				const copyBtn = node.querySelector('.copy');
@@ -141,56 +150,71 @@
 				const dlBtn = node.querySelector('.download');
 				const txt = node.querySelector('.embedCode');
 
-								// Load animation data via fetch(text) to avoid lottie-web XHR responseType issues
-								// Try to fetch as text and parse JSON, then provide to player via animationData (preferred)
-								// or blob URL. If fetch fails (CORS, network), fall back to setting the src attribute.
-								(async ()=>{
-									try{
-										const resp = await fetch(it.url);
-										const text = await resp.text();
-										const parsed = JSON.parse(text);
-										// Preferred: set animationData property if available on the element
-										if('animationData' in player){
-											try{ player.animationData = parsed; }catch(e){
-												// if direct assignment fails, fallback to blob URL
-												const blob = new Blob([JSON.stringify(parsed)], {type:'application/json'});
-												player.setAttribute('src', URL.createObjectURL(blob));
-											}
-										}else{
-											const blob = new Blob([JSON.stringify(parsed)], {type:'application/json'});
-											player.setAttribute('src', URL.createObjectURL(blob));
-										}
-									}catch(e){
-										// fallback: let the player load the remote URL directly (may still fail)
-										player.setAttribute('src', it.url);
-									}
-								})();
+				// Detect file type and create appropriate player
+				const isLottie = it.url.includes('.lottie');
+				const isJson = it.url.includes('.json');
+				
+				if (isLottie) {
+					// Use dotlottie-player for .lottie files
+					const player = document.createElement('dotlottie-player');
+					player.setAttribute('src', it.url);
+					player.setAttribute('background', 'transparent');
+					player.setAttribute('speed', '1');
+					player.setAttribute('loop', '');
+					player.setAttribute('autoplay', '');
+					player.style.cssText = 'width:100%;height:100%';
+					previewEl.appendChild(player);
+				} else if (isJson) {
+					// Use lottie-player for .json files
+					const player = document.createElement('lottie-player');
+					player.setAttribute('src', it.url);
+					player.setAttribute('background', 'transparent');
+					player.setAttribute('speed', '1');
+					player.setAttribute('loop', '');
+					player.setAttribute('autoplay', '');
+					player.style.cssText = 'width:100%;height:100%';
+					previewEl.appendChild(player);
+				} else {
+					previewEl.innerHTML = '<span style="color:var(--muted)">Unsupported format</span>';
+				}
+
 				pageidEl.textContent = it.page_id || '(no page_id)';
 				urlEl.textContent = it.url;
 
 				copyBtn.addEventListener('click', ()=>{
 					navigator.clipboard.writeText(it.url).then(()=>{
+						showToast('URL copied to clipboard!');
 						copyBtn.textContent = 'Copied';
 						setTimeout(()=>copyBtn.textContent='Copy URL',900);
+					}).catch(()=>{
+						showToast('Failed to copy', 'error');
 					});
 				});
 
 				embedBtn.addEventListener('click', ()=>{
-					const iframe = `<iframe src="${it.url}" style="width:320px;height:320px;border:0" title="lottie"></iframe>`;
+					const isLottieFile = it.url.includes('.lottie');
+					const embedCode = isLottieFile 
+						? `<dotlottie-player src="${it.url}" background="transparent" speed="1" loop autoplay style="width: 300px; height: 300px;"></dotlottie-player>`
+						: `<lottie-player src="${it.url}" background="transparent" speed="1" loop autoplay style="width: 300px; height: 300px;"></lottie-player>`;
 					txt.style.display = '';
-					txt.value = iframe;
+					txt.value = embedCode;
 					txt.select();
-					try{navigator.clipboard.writeText(iframe);}catch(e){}
+					navigator.clipboard.writeText(embedCode).then(()=>{
+						showToast('Embed code copied to clipboard!');
+					}).catch(()=>{
+						showToast('Embed code shown above', 'error');
+					});
 				});
 
 				dlBtn.addEventListener('click', ()=>{
-					// download raw .lottie url: same as url
 					const a = document.createElement('a');
 					a.href = it.url;
-					a.download = '';
+					a.download = it.url.split('/').pop() || 'lottie-asset';
+					a.target = '_blank';
 					document.body.appendChild(a);
 					a.click();
-					a.remove();
+					document.body.removeChild(a);
+					showToast('Download started!');
 				});
 
 				grid.appendChild(node);
