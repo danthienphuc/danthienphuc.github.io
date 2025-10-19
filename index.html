@@ -1,61 +1,160 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Trang cá nhân — Daniel Mai</title>
-    <meta name="description" content="Trang cá nhân của Daniel Mai — links đến CV và Lottie tool." />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daniel Mai - Personal Portfolio</title>
     <link rel="stylesheet" href="assets/style.css">
-  </head>
-  <body>
-    <header class="site-header">
-      <div class="container header-inner">
-        <a class="brand" href="/">Daniel Mai</a>
-
-        <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
-          <span class="sr-only">Mở menu</span>
-          ☰
-        </button>
-
-        <nav id="site-nav" class="site-nav" aria-label="Chính">
-          <ul>
-            <li><a href="/resume/cv1-dev/index.html">CV (Dev)</a></li>
-            <li><a href="/lottie/index.html">Lottie Tool</a></li>
-            <li><a href="#about">Giới thiệu</a></li>
-            <li><a href="#contact">Liên hệ</a></li>
-          </ul>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <h1>Daniel Mai</h1>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link active">Trang chủ</a></li>
+                <li><a href="#about" class="nav-link">Giới thiệu</a></li>
+                <li><a href="#tools" class="nav-link">Công cụ</a></li>
+                <li><a href="#contact" class="nav-link">Liên hệ</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </nav>
-      </div>
     </header>
 
-    <main>
-      <section class="hero container">
-        <h1>Xin chào — mình là Daniel Mai</h1>
-        <p class="lead">Developer, designer và người thích khám phá animation. Truy cập CV hoặc Lottie tool bên dưới.</p>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Chào mừng đến với trang cá nhân của tôi</h2>
+            <p class="hero-subtitle">Developer & Creative Enthusiast</p>
+            <div class="hero-buttons">
+                <a href="resume/cv1-dev/index.html" class="btn btn-primary">Xem CV</a>
+                <a href="#tools" class="btn btn-secondary">Khám phá công cụ</a>
+            </div>
+        </div>
+    </section>
 
-        <p class="hero-ctas">
-          <a class="btn" href="/resume/cv1-dev/index.html">Xem CV</a>
-          <a class="btn btn-secondary" href="/lottie/index.html">Mở Lottie Tool</a>
-        </p>
-      </section>
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">Giới thiệu</h2>
+            <div class="about-content">
+                <p>Xin chào! Tôi là Daniel Mai, một nhà phát triển đam mê công nghệ và sáng tạo.</p>
+                <p>Trang web này là nơi tôi chia sẻ hồ sơ cá nhân và các công cụ hữu ích mà tôi đã tạo ra.</p>
+            </div>
+        </div>
+    </section>
 
-      <section id="about" class="container about">
-        <h2>Về mình</h2>
-        <p>Tôi làm web, code và tạo animation. Trang này là hub để truy cập CV và các công cụ tôi viết.</p>
-      </section>
+    <!-- Tools Section -->
+    <section id="tools" class="tools">
+        <div class="container">
+            <h2 class="section-title">Công cụ & Dự án</h2>
+            <div class="tools-grid">
+                <!-- CV Card -->
+                <div class="tool-card">
+                    <div class="tool-icon">📄</div>
+                    <h3>Hồ sơ cá nhân (CV)</h3>
+                    <p>Xem hồ sơ và kinh nghiệm làm việc của tôi</p>
+                    <div class="tool-links">
+                        <a href="resume/cv1-dev/index.html" class="tool-link">CV Developer</a>
+                        <a href="resume/cv1-dev/en.html" class="tool-link">CV English</a>
+                    </div>
+                </div>
 
-      <section id="contact" class="container contact">
-        <h2>Liên hệ</h2>
-        <p>Email: <a href="mailto:danthienphuc@example.com">danthienphuc@example.com</a></p>
-      </section>
-    </main>
+                <!-- Lottie Tool Card -->
+                <div class="tool-card">
+                    <div class="tool-icon">🎨</div>
+                    <h3>Lottie Animation Tool</h3>
+                    <p>Công cụ xem và quản lý animation Lottie</p>
+                    <div class="tool-links">
+                        <a href="lottie/index.html" class="tool-link">Mở công cụ</a>
+                    </div>
+                </div>
 
-    <footer class="site-footer">
-      <div class="container">
-        <small>© <span id="year"></span> Daniel Mai — <a href="/">Trang cá nhân</a></small>
-      </div>
+                <!-- Placeholder for future tools -->
+                <div class="tool-card coming-soon">
+                    <div class="tool-icon">🚀</div>
+                    <h3>Công cụ khác</h3>
+                    <p>Các công cụ và dự án mới sẽ sớm được thêm vào</p>
+                    <div class="tool-links">
+                        <span class="tool-link disabled">Sắp ra mắt</span>
+                    </div>
+                </div>
+
+                <!-- Another placeholder -->
+                <div class="tool-card coming-soon">
+                    <div class="tool-icon">⚡</div>
+                    <h3>Dự án tiếp theo</h3>
+                    <p>Đang trong quá trình phát triển</p>
+                    <div class="tool-links">
+                        <span class="tool-link disabled">Đang phát triển</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Liên hệ</h2>
+            <div class="contact-content">
+                <p>Hãy kết nối với tôi qua các kênh sau:</p>
+                <div class="contact-cards">
+                    <!-- Phone/Zalo Card -->
+                    <div class="contact-card">
+                        <div class="contact-icon">📱</div>
+                        <h3>Zalo</h3>
+                        <p>Chat trực tiếp qua Zalo</p>
+                        <button class="contact-btn reveal-contact" data-type="zalo" data-encoded="MDg5OTkwMDkxMA==">
+                            <span class="btn-text">Hiển thị số Zalo</span>
+                            <span class="btn-icon">👁️</span>
+                        </button>
+                    </div>
+
+                    <!-- Facebook Card -->
+                    <div class="contact-card">
+                        <div class="contact-icon">👤</div>
+                        <h3>Facebook</h3>
+                        <p>Kết nối trên Facebook</p>
+                        <a href="https://facebook.com/danthienphuc" class="contact-btn" target="_blank">@danthienphuc</a>
+                    </div>
+
+                    <!-- GitHub Card -->
+                    <div class="contact-card">
+                        <div class="contact-icon">�</div>
+                        <h3>GitHub</h3>
+                        <p>Xem các dự án của tôi</p>
+                        <a href="https://github.com/danthienphuc" class="contact-btn" target="_blank">@danthienphuc</a>
+                    </div>
+
+                    <!-- Email Card -->
+                    <div class="contact-card">
+                        <div class="contact-icon">📧</div>
+                        <h3>Email</h3>
+                        <p>Gửi email cho tôi</p>
+                        <button class="contact-btn reveal-contact" data-type="email" data-encoded="ZGFudGhpZW5waHVjQGdtYWlsLmNvbQ==">
+                            <span class="btn-text">Hiển thị Email</span>
+                            <span class="btn-icon">👁️</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Daniel Mai. All rights reserved.</p>
+        </div>
     </footer>
 
-    <script src="assets/script.js" defer></script>
-  </body>
+    <script src="assets/script.js"></script>
+</body>
 </html>
