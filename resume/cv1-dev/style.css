@@ -1,0 +1,572 @@
+/* ============================================
+   Global Styles & Reset
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #1e40af;
+    --accent-color: #3b82f6;
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+    --bg-light: #f9fafb;
+    --bg-dark: #1f2937;
+    --white: #ffffff;
+    --border-color: #e5e7eb;
+    --success-color: #10b981;
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-dark);
+    background-color: #f3f4f6;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+/* ============================================
+   CV Container - A4 Size
+   ============================================ */
+.cv-container {
+    max-width: 210mm;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    min-height: 297mm;
+}
+
+/* ============================================
+   Left Column Styling
+   ============================================ */
+.left-column {
+    background: var(--gradient-primary);
+    color: var(--white);
+    padding: 40px 30px;
+    min-height: 297mm;
+}
+
+/* Profile Section */
+.profile-section {
+    margin-bottom: 40px;
+    animation: fadeInDown 1s ease;
+}
+
+.profile-image-wrapper {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 25px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.profile-image-wrapper:hover {
+    transform: scale(1.05) rotate(5deg);
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-name {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.profile-title {
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    opacity: 0.95;
+}
+
+.experience-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+}
+
+.experience-badge i {
+    margin-right: 8px;
+}
+
+/* Section Styling in Left Column */
+.left-column .section {
+    margin-bottom: 35px;
+}
+
+.left-column .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.left-column .section-title i {
+    font-size: 20px;
+}
+
+/* Contact List */
+.contact-list {
+    list-style: none;
+    padding: 0;
+}
+
+.contact-list li {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+}
+
+.contact-list li:hover {
+    transform: translateX(5px);
+}
+
+.contact-list i {
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.contact-list a {
+    color: var(--white);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.contact-list a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+/* Skills Section */
+.skill-category {
+    margin-bottom: 25px;
+}
+
+.skill-category h4 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    opacity: 0.9;
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.skill-tag {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 6px 14px;
+    border-radius: 15px;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.skill-tag:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Certificates */
+.certificate-list {
+    list-style: none;
+    padding: 0;
+}
+
+.certificate-list li {
+    margin-bottom: 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: transform 0.3s ease;
+}
+
+.certificate-list li:hover {
+    transform: translateX(5px);
+}
+
+.certificate-list i {
+    font-size: 18px;
+    margin-top: 2px;
+    color: #fbbf24;
+}
+
+.certificate-list strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+.certificate-list .year {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* Education */
+.education-item h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.education-item .institution {
+    font-size: 14px;
+    margin-bottom: 5px;
+    opacity: 0.9;
+}
+
+.education-item .period {
+    font-size: 13px;
+    margin-bottom: 5px;
+    opacity: 0.85;
+}
+
+.education-item .gpa {
+    font-size: 13px;
+    opacity: 0.85;
+    font-weight: 500;
+}
+
+/* ============================================
+   Right Column Styling
+   ============================================ */
+.right-column {
+    padding: 40px 35px;
+    background: var(--white);
+}
+
+.right-column .section {
+    margin-bottom: 35px;
+}
+
+.right-column .section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.right-column .section-title i {
+    font-size: 26px;
+}
+
+/* Summary Section */
+.summary-text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-light);
+    text-align: justify;
+}
+
+/* Experience Items */
+.experience-item {
+    margin-bottom: 35px;
+    padding: 25px;
+    border-left: 4px solid var(--primary-color);
+    background: var(--bg-light);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.experience-item:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateX(5px);
+}
+
+.company-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.company-header h4 {
+    font-size: 20px;
+    color: var(--text-dark);
+    font-weight: 700;
+    margin: 0;
+}
+
+.period {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.position {
+    font-size: 16px;
+    color: var(--secondary-color);
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Project Items */
+.project-item {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: var(--white);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.project-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.1);
+}
+
+.project-item h5 {
+    font-size: 17px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.project-item h5 i {
+    color: var(--primary-color);
+}
+
+.project-period {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.project-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-light);
+    margin-bottom: 15px;
+}
+
+/* Tech Stack */
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.tech-tag {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: var(--white);
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.tech-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Achievements List */
+.achievements {
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.achievements li {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.achievements li::marker {
+    color: var(--success-color);
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+@media (max-width: 768px) {
+    .cv-container {
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .left-column,
+    .right-column {
+        padding: 25px 20px;
+        min-height: auto;
+    }
+
+    .profile-image-wrapper {
+        width: 150px;
+        height: 150px;
+    }
+
+    .profile-name {
+        font-size: 24px;
+    }
+
+    .profile-title {
+        font-size: 16px;
+    }
+
+    .right-column .section-title {
+        font-size: 20px;
+    }
+
+    .company-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tech-stack {
+        gap: 6px;
+    }
+}
+
+@media (max-width: 576px) {
+    .profile-image-wrapper {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-name {
+        font-size: 22px;
+    }
+
+    .left-column .section-title,
+    .right-column .section-title {
+        font-size: 18px;
+    }
+
+    .company-header h4 {
+        font-size: 18px;
+    }
+}
+
+/* ============================================
+   Print tweaks
+   ============================================ */
+@media print {
+    /* Ask the browser to preserve colors when printing (supported in modern browsers) */
+    body, .left-column, .right-column {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Provide a solid color fallback for the left column so printers that drop gradients still render a background.
+       Use !important to increase chance of being applied over other rules. */
+    .left-column {
+        background: #667eea !important; /* fallback solid color close to the gradient start */
+        color: #ffffff !important;
+    }
+
+    /* Ensure container fits A4 when printed from browsers that respect page size */
+    .cv-container {
+        box-shadow: none !important;
+        background: white !important;
+        /* Some browsers ignore page sizing via CSS, but keep this as a hint */
+        width: 210mm !important;
+        min-height: 297mm !important;
+    }
+
+    /* Keep UI-only elements hidden */
+    .no-print, .scroll-progress {
+        display: none !important;
+    }
+
+    /* Avoid cutting important sections awkwardly across pages */
+    .experience-item, .project-item, .profile-section {
+        page-break-inside: avoid;
+    }
+}

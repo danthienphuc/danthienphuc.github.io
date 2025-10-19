@@ -1,254 +1,61 @@
 <!doctype html>
-<html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width,initial-scale=1" />
-	<title>Lottie Gallery</title>
-	<style>
-		:root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#4f46e5}
-		body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:linear-gradient(180deg,#071024 0%, #081126 100%);color:#e6eef8}
-		.container{max-width:1100px;margin:28px auto;padding:18px}
-		header{display:flex;gap:12px;align-items:center;margin-bottom:18px}
-		h1{margin:0;font-size:20px}
-		.controls{margin-left:auto;display:flex;gap:8px;align-items:center}
-		input[type=search]{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:inherit;width:360px}
-		button{background:var(--card);color:inherit;border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px;cursor:pointer}
-		.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-		.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:10px}
-		.preview{height:180px;background:linear-gradient(90deg,rgba(255,255,255,0.01),rgba(255,255,255,0.02));border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-		.meta{font-size:13px;color:var(--muted);word-break:break-all}
-		.buttons{display:flex;gap:6px}
-		.pager{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:18px}
-		.small{font-size:12px;padding:6px 8px}
-		.count{color:var(--muted);font-size:13px}
-		.no-results{text-align:center;color:var(--muted);padding:24px}
-		.embedCode{width:100%;font-family:monospace;font-size:12px;padding:8px;border-radius:6px;background:rgba(0,0,0,0.25);color:#e6eef8;border:1px solid rgba(255,255,255,0.03)}
-		footer{margin-top:26px;color:var(--muted);font-size:13px;text-align:center}
-		.toast{position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:8px;color:#fff;font-size:14px;display:none;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
-		.toast.success{background:#28a745}
-		.toast.error{background:#dc3545}
-	</style>
-  
-  <!-- dotLottie player for .lottie packages -->
-  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.js"></script>
-  <!-- lottie-player web component for .json (LottieFiles player) -->
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-</head>
-<body>
-	<div class="container">
-		<header>
-			<div>
-				<h1>Lottie Gallery</h1>
-				<div class="count" id="status">Loading…</div>
-			</div>
-			<div class="controls">
-				<input id="search" type="search" placeholder="Tìm kiếm page_id hoặc url..." />
-				<button id="reload">Reload</button>
-				<select id="perPage" title="Items per page">
-					<option value="20">20</option>
-					<option value="50">50</option>
-					<option value="100">100</option>
-					<option value="200">200</option>
-				</select>
-			</div>
-		</header>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Trang cá nhân — Daniel Mai</title>
+    <meta name="description" content="Trang cá nhân của Daniel Mai — links đến CV và Lottie tool." />
+    <link rel="stylesheet" href="assets/style.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/">Daniel Mai</a>
 
-		<main>
-			<div id="grid" class="grid"></div>
-			<div id="noResults" class="no-results" style="display:none">No results</div>
-			<div class="pager" id="pager"></div>
-		</main>
+        <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
+          <span class="sr-only">Mở menu</span>
+          ☰
+        </button>
 
-		<footer>
-			Data source: <code>all_lottie_index.json</code> — Opened locally; for full preview the page may need network to load the lottie player and animations.
-		</footer>
-	</div>
+        <nav id="site-nav" class="site-nav" aria-label="Chính">
+          <ul>
+            <li><a href="/resume/cv1-dev/index.html">CV (Dev)</a></li>
+            <li><a href="/lottie/index.html">Lottie Tool</a></li>
+            <li><a href="#about">Giới thiệu</a></li>
+            <li><a href="#contact">Liên hệ</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-	<div class="toast" id="toast"></div>
+    <main>
+      <section class="hero container">
+        <h1>Xin chào — mình là Daniel Mai</h1>
+        <p class="lead">Developer, designer và người thích khám phá animation. Truy cập CV hoặc Lottie tool bên dưới.</p>
 
-	<template id="cardTpl">
-		<article class="card">
-			<div class="preview" data-preview>
-				<!-- Player will be inserted here dynamically -->
-			</div>
-			<div class="meta" data-pageid></div>
-			<div class="meta" data-url></div>
-			<div class="buttons">
-				<button class="small copy">Copy URL</button>
-				<button class="small embed">Embed</button>
-				<button class="small download">Download</button>
-			</div>
-			<textarea class="embedCode" rows="3" readonly style="display:none"></textarea>
-		</article>
-	</template>
+        <p class="hero-ctas">
+          <a class="btn" href="/resume/cv1-dev/index.html">Xem CV</a>
+          <a class="btn btn-secondary" href="/lottie/index.html">Mở Lottie Tool</a>
+        </p>
+      </section>
 
-	<script>
-		// Contract: load JSON mapping url -> { page_id }
-		// Inputs: all_lottie_index.json in same folder
-		// Output: gallery with pagination, search, copy/embed/download
+      <section id="about" class="container about">
+        <h2>Về mình</h2>
+        <p>Tôi làm web, code và tạo animation. Trang này là hub để truy cập CV và các công cụ tôi viết.</p>
+      </section>
 
-		const PATH_JSON = './all_lottie_index.json';
-		let items = []; // {url,page_id}
-		let filtered = [];
-		let page = 1;
+      <section id="contact" class="container contact">
+        <h2>Liên hệ</h2>
+        <p>Email: <a href="mailto:danthienphuc@example.com">danthienphuc@example.com</a></p>
+      </section>
+    </main>
 
-		const grid = document.getElementById('grid');
-		const status = document.getElementById('status');
-		const pager = document.getElementById('pager');
-		const search = document.getElementById('search');
-		const reloadBtn = document.getElementById('reload');
-		const perPageSel = document.getElementById('perPage');
-		const noResults = document.getElementById('noResults');
-		const toast = document.getElementById('toast');
+    <footer class="site-footer">
+      <div class="container">
+        <small>© <span id="year"></span> Daniel Mai — <a href="/">Trang cá nhân</a></small>
+      </div>
+    </footer>
 
-		function showToast(message, type = 'success') {
-			toast.textContent = message;
-			toast.className = `toast ${type}`;
-			toast.style.display = 'block';
-			setTimeout(() => { toast.style.display = 'none'; }, 3000);
-		}
-
-		function formatCount() {
-			status.textContent = `${filtered.length} items — page ${page}/${Math.max(1, Math.ceil(filtered.length / perPage()))}`;
-		}
-
-		function perPage(){return Number(perPageSel.value)||12}
-
-		async function loadData(){
-			status.textContent = 'Loading…';
-			try{
-				const res = await fetch(PATH_JSON);
-				if(!res.ok) throw new Error(res.statusText);
-				const obj = await res.json();
-				items = Object.keys(obj).map(k=>({url:k,page_id:obj[k].page_id||''}));
-				filtered = items.slice();
-				page = 1;
-				render();
-			}catch(err){
-				status.textContent = 'Error loading JSON — open http server or check file presence';
-				console.error(err);
-			}
-		}
-
-		function render(){
-			grid.innerHTML = '';
-			const start = (page-1)*perPage();
-			const slice = filtered.slice(start, start+perPage());
-			if(slice.length===0){
-				noResults.style.display = 'block';
-			}else{
-				noResults.style.display = 'none';
-			}
-			const tpl = document.getElementById('cardTpl');
-			for(const it of slice){
-				const node = tpl.content.cloneNode(true);
-				const previewEl = node.querySelector('[data-preview]');
-				const pageidEl = node.querySelector('[data-pageid]');
-				const urlEl = node.querySelector('[data-url]');
-				const copyBtn = node.querySelector('.copy');
-				const embedBtn = node.querySelector('.embed');
-				const dlBtn = node.querySelector('.download');
-				const txt = node.querySelector('.embedCode');
-
-				// Detect file type and create appropriate player
-				const isLottie = it.url.includes('.lottie');
-				const isJson = it.url.includes('.json');
-				
-				if (isLottie) {
-					// Use dotlottie-player for .lottie files
-					const player = document.createElement('dotlottie-player');
-					player.setAttribute('src', it.url);
-					player.setAttribute('background', 'transparent');
-					player.setAttribute('speed', '1');
-					player.setAttribute('loop', '');
-					player.setAttribute('autoplay', '');
-					player.style.cssText = 'width:100%;height:100%';
-					previewEl.appendChild(player);
-				} else if (isJson) {
-					// Use lottie-player for .json files
-					const player = document.createElement('lottie-player');
-					player.setAttribute('src', it.url);
-					player.setAttribute('background', 'transparent');
-					player.setAttribute('speed', '1');
-					player.setAttribute('loop', '');
-					player.setAttribute('autoplay', '');
-					player.style.cssText = 'width:100%;height:100%';
-					previewEl.appendChild(player);
-				} else {
-					previewEl.innerHTML = '<span style="color:var(--muted)">Unsupported format</span>';
-				}
-
-				pageidEl.textContent = it.page_id || '(no page_id)';
-				urlEl.textContent = it.url;
-
-				copyBtn.addEventListener('click', ()=>{
-					navigator.clipboard.writeText(it.url).then(()=>{
-						showToast('URL copied to clipboard!');
-						copyBtn.textContent = 'Copied';
-						setTimeout(()=>copyBtn.textContent='Copy URL',900);
-					}).catch(()=>{
-						showToast('Failed to copy', 'error');
-					});
-				});
-
-				embedBtn.addEventListener('click', ()=>{
-					const isLottieFile = it.url.includes('.lottie');
-					const embedCode = isLottieFile 
-						? `<dotlottie-player src="${it.url}" background="transparent" speed="1" loop autoplay style="width: 300px; height: 300px;"></dotlottie-player>`
-						: `<lottie-player src="${it.url}" background="transparent" speed="1" loop autoplay style="width: 300px; height: 300px;"></lottie-player>`;
-					txt.style.display = '';
-					txt.value = embedCode;
-					txt.select();
-					navigator.clipboard.writeText(embedCode).then(()=>{
-						showToast('Embed code copied to clipboard!');
-					}).catch(()=>{
-						showToast('Embed code shown above', 'error');
-					});
-				});
-
-				dlBtn.addEventListener('click', ()=>{
-					const a = document.createElement('a');
-					a.href = it.url;
-					a.download = it.url.split('/').pop() || 'lottie-asset';
-					a.target = '_blank';
-					document.body.appendChild(a);
-					a.click();
-					document.body.removeChild(a);
-					showToast('Download started!');
-				});
-
-				grid.appendChild(node);
-			}
-			renderPager();
-			formatCount();
-		}
-
-		function renderPager(){
-			pager.innerHTML = '';
-			const total = Math.max(1, Math.ceil(filtered.length / perPage()));
-			const createBtn = (txt,disabled,fn)=>{
-				const b = document.createElement('button'); b.textContent = txt; b.className='small'; if(disabled) b.disabled=true; b.addEventListener('click',fn); return b;
-			}
-			pager.appendChild(createBtn('Prev', page<=1, ()=>{ if(page>1){page--;render();} }));
-			const info = document.createElement('div'); info.className='count'; info.textContent = ` ${page} / ${total} `;
-			pager.appendChild(info);
-			pager.appendChild(createBtn('Next', page>=total, ()=>{ if(page<total){page++;render();} }));
-		}
-
-		function applySearch(){
-			const q = search.value.trim().toLowerCase();
-			if(!q){ filtered = items.slice(); page=1; render(); return; }
-			filtered = items.filter(i=> (i.page_id||'').toLowerCase().includes(q) || i.url.toLowerCase().includes(q) );
-			page = 1; render();
-		}
-
-		search.addEventListener('input', ()=>{ applySearch(); });
-		perPageSel.addEventListener('change', ()=>{ page=1; render(); });
-		reloadBtn.addEventListener('click', ()=>{ loadData(); });
-
-		// initial load
-		loadData();
-	</script>
-</body>
+    <script src="assets/script.js" defer></script>
+  </body>
 </html>
-
