@@ -3,473 +3,544 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mai Văn Phúc - Fullstack Developer CV</title>
+    <title>🚀 Welcome to Daniel World</title>
     
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+    <style>
+        /* Reset and Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0a0a1a;
+            color: #f0f0f0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Scene Container */
+        #scene {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Magic Circle - rotation animation */
+        .magic img {
+            position: absolute;
+            top: 30vw;
+            left: 50%;
+            width: 60vw;
+            animation: rotateMagicCircle 10s linear infinite;
+            z-index: 2;
+        }
+
+        @keyframes rotateMagicCircle {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        /* 1. Doors (Bottom Layer) */
+        .door {
+            /* display: none; */
+            margin: 14%;
+            position: absolute;
+            top: 0;
+            z-index: 2;
+        }
+        
+        .door img {
+            width: 30vw;
+        }
+
+        
+
+        #robot-lottie {
+            z-index: 5;
+            /* set position */
+            left: 20vw;
+            bottom: 10vh;
+            position: absolute;
+            width: 180px;
+            opacity: 0; /* start hidden for intro animation */
+        }
+
+        
+        @media (max-aspect-ratio: 1) {
+
+            .magic img {
+                top: 30vh;
+                width: 50vh;
+            }
+            
+            .door {
+                margin: 15vh;
+            }
+
+            .door img {
+                width: 32vh;
+            }
+            #robot-lottie {
+                left: 30vh;
+                bottom: 30vh;
+            }
+        }
+
+
+        #left-door {
+            transform-origin: left center;
+        }
+        
+        
+        #right-door {
+            transform-origin: right center;
+        }
+
+        /* 2. Portal (Starts hidden, behind doors) */
+        #portal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1px;
+            height: 1px;
+            background: radial-gradient(circle, #f197ff, #00ffff, #ffffff, #ffffff00 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 1; /* Phía sau cửa */
+            opacity: 0;
+        }
+
+        /* 3. Background Frame (On top of doors) */
+        #background-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            z-index: 3;
+            pointer-events: none; /* Cho phép click xuyên qua */
+        }
+
+        /* 4. UI (Top Layer) */
+        #ui-container {
+            position: absolute;
+            bottom: 5vh;
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(10, 10, 30, 0.75);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 100, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            opacity: 0; /* start hidden for intro */
+        }
+
+        #message {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            width: 100%;
+            max-width: 350px;
+            margin-bottom: 0.5rem;
+        }
+
+        #magicWord {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #555;
+            background: #222;
+            color: #fff;
+            border-radius: 8px 0 0 8px;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        #magicWord:focus {
+            border-color: #8a2be2;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        }
+
+        #openDoorBtn {
+            padding: 0.75rem 1.25rem;
+            border: none;
+            background: #8a2be2;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        
+        #openDoorBtn:hover {
+            background: #7b24c6;
+        }
+        
+        #openDoorBtn:active {
+            transform: scale(0.98);
+        }
+        
+        #openDoorBtn:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .language-selection {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.25rem;
+            width: 100%;
+        }
+
+        .language-selection label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        #status-message {
+            height: 1.2em;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        #status-message.error {
+            color: #ff6b6b;
+        }
+        
+        #status-message.success {
+            color: #51ffb8;
+        }
+
+        /* initial hidden state for intro elements */
+        #ui-container h2,
+        #ui-container h3,
+        .language-selection,
+        .input-group,
+        #status-message {
+            opacity: 0;
+        }
+
+        /* Loading overlay shown while assets initialize */
+        #loadingOverlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            background: radial-gradient(circle at 50% 35%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 40%, rgba(10,0,20,0.95) 100%);
+            backdrop-filter: blur(6px) saturate(1.1);
+            pointer-events: none;
+        }
+        .loader {
+            text-align: center;
+            color: #f0f0f0;
+        }
+        .loader-circle {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(0,234,255,0.12), inset 0 0 12px rgba(138,43,226,0.14);
+            margin: 0 auto;
+            filter: drop-shadow(0 0 8px rgba(0,234,255,0.12));
+            animation: loader-spin 1.45s linear infinite;
+        }
+        @keyframes loader-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .loader-text {
+            margin-top: 10px;
+            font-weight: 600;
+            letter-spacing: 0.6px;
+            color: #f0f0f0;
+            text-shadow: 0 0 8px rgba(0,234,255,0.06);
+        }
+
+    </style>
 </head>
 <body>
-    <!-- CV Container -->
-    <div class="cv-container">
-        <div class="container-fluid">
-            <div class="row">
-                <!-- Left Column -->
-                <div class="col-md-4 left-column">
-                    <!-- Profile Section -->
-                    <div class="profile-section text-center">
-                        <div class="profile-image-wrapper">
-                            <img src="../00-info/daniel-passport.jpg" alt="Mai Văn Phúc" class="profile-image">
-                        </div>
-                        <h1 class="profile-name">Mai Văn Phúc</h1>
-                        <h2 class="profile-title">Fullstack Developer</h2>
-                        <div class="experience-badge">
-                            <i class="fas fa-briefcase"></i>
-                            <span>3+ năm kinh nghiệm</span>
-                        </div>
-                    </div>
-
-                    <!-- Contact Section -->
-                    <div class="section contact-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-address-card"></i>
-                            Thông Tin Liên Hệ
-                        </h3>
-                        <ul class="contact-list">
-                            <li>
-                                <i class="fas fa-phone"></i>
-                                <span>+84 899 900 910</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-envelope"></i>
-                                <span>danthienphuc@gmail.com</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>Đông Hưng Thuận, TP.HCM</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-globe"></i>
-                                <a href="https://danthienphuc.github.io/" target="_blank">danthienphuc.github.io</a>
-                            </li>
-                            <li>
-                                <i class="fab fa-github"></i>
-                                <a href="https://github.com/danthienphuc" target="_blank">github.com/danthienphuc</a>
-                            </li>
-                            <li>
-                                <i class="fab fa-linkedin"></i>
-                                <a href="https://linkedin.com/in/danthienphuc" target="_blank">linkedin.com/in/danthienphuc</a>
-                            </li>
-                            <li>
-                                <i class="fas fa-birthday-cake"></i>
-                                <span>02/08/1998</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Skills Section -->
-                    <div class="section skills-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-code"></i>
-                            Kỹ Năng Chuyên Môn
-                        </h3>
-                        
-                        <div class="skill-category">
-                            <h4>Ngôn ngữ (Expert)</h4>
-                            <div class="skill-tags">
-                                <span class="skill-tag">Python</span>
-                                <span class="skill-tag">JavaScript</span>
-                            </div>
-                        </div>
-
-                        <div class="skill-category">
-                            <h4>Ngôn ngữ (Advanced)</h4>
-                            <div class="skill-tags">
-                                <span class="skill-tag">Dart/Flutter</span>
-                                <span class="skill-tag">C/C++</span>
-                                <span class="skill-tag">PHP</span>
-                            </div>
-                        </div>
-
-                        <div class="skill-category">
-                            <h4>Frameworks</h4>
-                            <div class="skill-tags">
-                                <span class="skill-tag">FastAPI</span>
-                                <span class="skill-tag">Spring Boot</span>
-                                <span class="skill-tag">Flutter</span>
-                                <span class="skill-tag">TensorFlow</span>
-                                <span class="skill-tag">React</span>
-                            </div>
-                        </div>
-
-                        <div class="skill-category">
-                            <h4>Database</h4>
-                            <div class="skill-tags">
-                                <span class="skill-tag">MySQL</span>
-                                <span class="skill-tag">PostgreSQL</span>
-                                <span class="skill-tag">MongoDB</span>
-                                <span class="skill-tag">BigQuery</span>
-                            </div>
-                        </div>
-
-                        <div class="skill-category">
-                            <h4>Cloud & DevOps</h4>
-                            <div class="skill-tags">
-                                <span class="skill-tag">GCP</span>
-                                <span class="skill-tag">Docker</span>
-                                <span class="skill-tag">Kubernetes</span>
-                                <span class="skill-tag">Terraform</span>
-                                <span class="skill-tag">Git</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Certificates Section -->
-                    <div class="section certificates-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-certificate"></i>
-                            Chứng Chỉ Nổi Bật
-                        </h3>
-                        <ul class="certificate-list">
-                            <li>
-                                <i class="fas fa-award"></i>
-                                <div>
-                                    <strong>AI Concepts - Microsoft</strong>
-                                    <span class="year">2025</span>
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-award"></i>
-                                <div>
-                                    <strong>Spring Ecosystem</strong>
-                                    <span class="year">2023</span>
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-award"></i>
-                                <div>
-                                    <strong>CNN Visualization</strong>
-                                    <span class="year">2023</span>
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-award"></i>
-                                <div>
-                                    <strong>Flutter Development</strong>
-                                    <span class="year">2023</span>
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-award"></i>
-                                <div>
-                                    <strong>Deep Learning - IBM</strong>
-                                    <span class="year">2021</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Education Section -->
-                    <div class="section education-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-graduation-cap"></i>
-                            Học Vấn
-                        </h3>
-                        <div class="education-item">
-                            <h4>Kỹ Sư Công Nghệ Thông Tin</h4>
-                            <p class="institution">Đại học HUTECH</p>
-                            <p class="period">2018 - 2022</p>
-                            <p class="gpa">GPA: 3.29/4.0</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Column -->
-                <div class="col-md-8 right-column">
-                    <!-- Summary Section -->
-                    <div class="section summary-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-user"></i>
-                            Giới Thiệu
-                        </h3>
-                        <p class="summary-text">
-                            Fullstack Developer (Python/Go/Flutter) với 3+ năm kinh nghiệm triển khai giải pháp IoT và backend trên GCP. 
-                            Chuyên xây dựng API bằng FastAPI, pipeline data vào BigQuery/Bigtable và tự động hoá testing cho embedded/SoC. 
-                            Đã triển khai thành công hệ thống cho 50+ doanh nghiệp, quản lý 500+ thiết bị, và phát triển giải pháp AI/ML 
-                            cho các dự án quốc tế (USA, Nhật Bản, Hong Kong). Tập trung tối ưu hiệu năng, triển khai production-ready 
-                            và chuyển giao cho khách hàng với kết quả đo được.
-                        </p>
-                    </div>
-
-                    <!-- Key Achievements Section -->
-                    <div class="section achievements-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-trophy"></i>
-                            Thành Tựu Nổi Bật
-                        </h3>
-                        <ul class="achievements">
-                            <li>Triển khai thành công hệ thống IoT cho <strong>50+ khách hàng</strong> doanh nghiệp trên toàn quốc</li>
-                            <li>Quản lý và bảo trì hệ thống phần mềm cho <strong>100+ máy giữ xe</strong> thông minh</li>
-                            <li>Xây dựng data pipeline xử lý real-time cho <strong>10,000+ thiết bị IoT</strong> logistics</li>
-                            <li>Phát triển automation testing giảm <strong>60% thời gian</strong> kiểm thử cho automotive SoC</li>
-                            <li>Triển khai AI detection system đạt <strong>98% accuracy</strong> cho playground safety</li>
-                        </ul>
-                    </div>
-
-                    <!-- Work Experience Section -->
-                    <div class="section experience-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-briefcase"></i>
-                            Kinh Nghiệm Làm Việc
-                        </h3>
-
-                        <!-- Hitachi Digital Service -->
-                        <div class="experience-item">
-                            <div class="company-header">
-                                <h4>Hitachi Digital Services</h4>
-                                <span class="period">05/2022 - 05/2025</span>
-                            </div>
-                            <p class="position">Software Engineer</p>
-
-                            <div class="project-item">
-                                <h5>
-                                    <i class="fas fa-robot"></i>
-                                    AI/ML Engineer - Playground Safety Detection
-                                </h5>
-                                <p class="project-period">04/2025 - 05/2025 | Entertainment Playground - Hong Kong</p>
-                                <p class="project-desc">
-                                    Phát triển AI detection system sử dụng TensorFlow và YOLO v8 để nhận diện hành vi nguy hiểm. 
-                                    Thu thập và label 10,000+ images, xây dựng real-time inference pipeline xử lý 30+ camera streams.
-                                </p>
-                                <ul class="achievements">
-                                    <li>Model đạt <strong>98% accuracy</strong> trong testing phase</li>
-                                    <li>Triển khai tại <strong>5 khu vui chơi</strong> với điều kiện đa dạng</li>
-                                    <li>Xử lý real-time <strong>30+ cameras</strong> đồng thời</li>
-                                </ul>
-                                <div class="tech-stack">
-                                    <span class="tech-tag">Python</span>
-                                    <span class="tech-tag">TensorFlow</span>
-                                    <span class="tech-tag">YOLO v8</span>
-                                    <span class="tech-tag">OpenCV</span>
-                                    <span class="tech-tag">GCP</span>
-                                    <span class="tech-tag">FastAPI</span>
-                                </div>
-                            </div>
-
-                            <div class="project-item">
-                                <h5>
-                                    <i class="fas fa-vial"></i>
-                                    Test Automation Engineer - Automotive SoC
-                                </h5>
-                                <p class="project-period">08/2023 - 03/2025 | Automotive SoC Board - Nhật Bản | Team: 6 engineers</p>
-                                <p class="project-desc">
-                                    Thiết kế và phát triển Test Build-in bằng C/C++ cho embedded software. Xây dựng 13,000+ test cases 
-                                    tự động cho diagnostics, CAN communication, và safety features theo chuẩn AUTOSAR. Tích hợp CI/CD pipeline.
-                                </p>
-                                <ul class="achievements">
-                                    <li>Giảm <strong>60% thời gian testing</strong> nhờ automation framework</li>
-                                    <li>Phát hiện <strong>15+ critical bugs</strong> trước release</li>
-                                    <li>Test framework trở thành <strong>standard tool</strong> cho product line</li>
-                                </ul>
-                                <div class="tech-stack">
-                                    <span class="tech-tag">Python</span>
-                                    <span class="tech-tag">C/C++</span>
-                                    <span class="tech-tag">Pytest</span>
-                                    <span class="tech-tag">Jenkins</span>
-                                    <span class="tech-tag">AUTOSAR</span>
-                                    <span class="tech-tag">CAN bus</span>
-                                </div>
-                            </div>
-
-                            <div class="project-item">
-                                <h5>
-                                    <i class="fas fa-microchip"></i>
-                                    Automotive Software Engineer
-                                </h5>
-                                <p class="project-period">06/2023 - 07/2023 | Automotive SoC Board - Nhật Bản | Team: 3 engineers</p>
-                                <p class="project-desc">
-                                    Phát triển sample applications bằng C/C++ để demo tính năng automotive SoC board. 
-                                    Validate performance, memory, power consumption. Tương tác hardware qua JTAG/UART.
-                                </p>
-                                <ul class="achievements">
-                                    <li>Sample apps là <strong>reference implementation</strong> cho 20+ customers</li>
-                                    <li>Phát hiện và fix <strong>15+ critical bugs</strong> trong SDK</li>
-                                </ul>
-                                <div class="tech-stack">
-                                    <span class="tech-tag">C/C++</span>
-                                    <span class="tech-tag">Embedded Linux</span>
-                                    <span class="tech-tag">JTAG</span>
-                                    <span class="tech-tag">CANoe</span>
-                                </div>
-                            </div>
-
-                            <div class="project-item">
-                                <h5>
-                                    <i class="fas fa-cloud"></i>
-                                    Cloud Backend Developer - Python
-                                </h5>
-                                <p class="project-period">05/2022 - 05/2023 | Logistics Solution - USA | Team: 5 engineers</p>
-                                <p class="project-desc">
-                                    Xây dựng data pipeline thu thập real-time từ 10,000+ thiết bị IoT logistics. 
-                                    Phát triển RESTful API bằng FastAPI xử lý 1M+ requests/day. Triển khai infrastructure as code với Terraform.
-                                </p>
-                                <ul class="achievements">
-                                    <li>Giảm latency pipeline nhờ optimize Pub/Sub subscription</li>
-                                    <li>Tối ưu BigQuery queries và Kubernetes pods</li>
-                                    <li>Xây dựng monitoring system với <strong>Datadog</strong></li>
-                                </ul>
-                                <div class="tech-stack">
-                                    <span class="tech-tag">Python</span>
-                                    <span class="tech-tag">FastAPI</span>
-                                    <span class="tech-tag">GCP</span>
-                                    <span class="tech-tag">Pub/Sub</span>
-                                    <span class="tech-tag">BigQuery</span>
-                                    <span class="tech-tag">Kubernetes</span>
-                                    <span class="tech-tag">Terraform</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tâm Toàn Thắng -->
-                        <div class="experience-item">
-                            <div class="company-header">
-                                <h4>Công Ty CP Đầu Tư PT & TV BĐS Tâm Toàn Thắng</h4>
-                                <span class="period">07/2018 - 04/2022</span>
-                            </div>
-                            <p class="position">Chuyên viên Kỹ thuật và Triển khai Phần mềm</p>
-                            <p class="project-desc">
-                                Thiết kế kiến trúc và triển khai hệ thống phần mềm quản lý máy giữ xe thông minh sử dụng Windows Server, 
-                                MySQL và embedded systems. Triển khai hạ tầng IT, setup server, cấu hình networking, kết nối thiết bị 
-                                ngoại vi (camera IP, barrier, card reader, sensor).
-                            </p>
-                            <ul class="achievements">
-                                <li>Triển khai cho <strong>50+ khách hàng</strong> (trung tâm thương mại, văn phòng, bệnh viện)</li>
-                                <li>Quản lý <strong>500+ thiết bị</strong> máy giữ xe, uptime <strong>99.5%</strong></li>
-                                <li>Hệ thống vé điện tử: Cáp treo Núi Chứa Chan (<strong>5000+ khách/ngày</strong>), Làng Cù Lần, Happyland</li>
-                                <li>Giảm <strong>40%</strong> thời gian triển khai nhờ chuẩn hóa quy trình</li>
-                                <li>Tăng <strong>25%</strong> doanh thu từ tối ưu thanh toán</li>
-                            </ul>
-                            <div class="tech-stack">
-                                <span class="tech-tag">Windows Server</span>
-                                <span class="tech-tag">MySQL</span>
-                                <span class="tech-tag">C#/.NET</span>
-                                <span class="tech-tag">Embedded Systems</span>
-                                <span class="tech-tag">TCP/IP</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Personal Projects Section -->
-                    <div class="section projects-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-laptop-code"></i>
-                            Dự Án Cá Nhân
-                        </h3>
-
-                        <div class="project-item">
-                            <h5>
-                                <i class="fas fa-car"></i>
-                                Parking Management System
-                            </h5>
-                            <p class="project-period">07/2025 - 09/2025 | Parking Company - TP.HCM (200 spots)</p>
-                            <p class="project-desc">
-                                Mobile app Flutter cho staff check-in/out vehicles bằng RFID/UHF tags. Backend FastAPI quản lý 
-                                vehicles, pricing, payments. Hỗ trợ kết nối nhiều kiểu thiết bị Windows, Android để đọc thẻ.
-                            </p>
-                            <ul class="achievements">
-                                <li><strong>200+ vehicles/ngày</strong>, 6,000+ sessions/tháng</li>
-                            </ul>
-                            <div class="tech-stack">
-                                <span class="tech-tag">Flutter</span>
-                                <span class="tech-tag">FastAPI</span>
-                                <span class="tech-tag">PostgreSQL</span>
-                                <span class="tech-tag">RFID/UHF</span>
-                            </div>
-                        </div>
-
-                        <div class="project-item">
-                            <h5>
-                                <i class="fas fa-mobile-alt"></i>
-                                Zalo Mini App - Order Management
-                            </h5>
-                            <p class="project-period">04/2025 - 07/2025 | E-commerce Shop - TP.HCM</p>
-                            <p class="project-desc">
-                                Zalo Mini App quản lý đơn hàng và khách hàng. Tích hợp Google Sheets API làm database (low-cost). 
-                                Features: order tracking, customer management, notifications.
-                            </p>
-                            <ul class="achievements">
-                                <li><strong>50+ users</strong>, 30+ orders/tháng</li>
-                                <li>Chi phí <strong>$0/tháng</strong> infrastructure</li>
-                            </ul>
-                            <div class="tech-stack">
-                                <span class="tech-tag">Vite</span>
-                                <span class="tech-tag">JavaScript</span>
-                                <span class="tech-tag">Zalo Mini App</span>
-                                <span class="tech-tag">Google Sheets API</span>
-                            </div>
-                        </div>
-
-                        <div class="project-item">
-                            <h5>
-                                <i class="fas fa-print"></i>
-                                Printing Management & Quotation System
-                            </h5>
-                            <p class="project-period">01/2025 - 06/2025 | Printing Company - TP.HCM (15 employees)</p>
-                            <p class="project-desc">
-                                Chuẩn hóa 30+ công thức tính giá in ấn. Web app quản lý end-to-end workflow: quotation → production → delivery. 
-                                Real-time status tracking, notifications qua email/SMS.
-                            </p>
-                            <ul class="achievements">
-                                <li>Giảm <strong>70% thời gian</strong> báo giá (30 phút → 5 phút)</li>
-                                <li>Tăng <strong>40% accuracy</strong>, pricing errors 15% → 2%</li>
-                                <li><strong>500+ orders/tháng</strong>, satisfaction 3.5 → 4.7/5</li>
-                            </ul>
-                            <div class="tech-stack">
-                                <span class="tech-tag">PHP/Laravel</span>
-                                <span class="tech-tag">Vue.js</span>
-                                <span class="tech-tag">MySQL</span>
-                            </div>
-                        </div>
-
-                        <div class="project-item">
-                            <h5>
-                                <i class="fas fa-qrcode"></i>
-                                Co-Working Space Check-in System
-                            </h5>
-                            <p class="project-period">06/2021 - 12/2021 | Co-working Startup (50 seats)</p>
-                            <p class="project-desc">
-                                Mobile app Flutter check-in/out bằng QR code. Backend API với Node.js và FastAPI quản lý users, 
-                                booking, check-in history. Real-time notification (FCM).
-                            </p>
-                            <ul class="achievements">
-                                <li><strong>50+ users</strong>, 200+ check-ins/week</li>
-                            </ul>
-                            <div class="tech-stack">
-                                <span class="tech-tag">Flutter</span>
-                                <span class="tech-tag">Node.js</span>
-                                <span class="tech-tag">FastAPI</span>
-                                <span class="tech-tag">MySQL</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    
+    <!-- Loading overlay shown until intro animation starts -->
+    <div id="loadingOverlay">
+        <div class="loader">
+            <div class="loader-circle" aria-hidden="true"></div>
+            <div class="loader-text">Connecting to the magic portal...</div>
         </div>
     </div>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <!-- Custom JS -->
-    <script src="script.js"></script>
+    <div id="scene">
+        <div class="magic">
+            <img src="./assets/magic-circle.jpg" alt="magic circle">
+        </div>
+
+        <div id="left-door" class="door">
+            <img src="./assets/left-door.png" alt="Left Door">
+        </div>
+        <div id="right-door" class="door">
+            <img src="./assets/right-door.png" alt="Right Door">
+        </div>
+
+        <div id="portal"></div>
+
+        <img id="background-frame" src="./assets/daniel-space.png" alt="Daniel Space">
+
+            <lottie-player id="robot-lottie"
+                src="./assets/robot_greeting.json"
+                background="transparent"
+                speed="1"
+                style="width: 180px; height: 180px; margin-bottom: -20px;"
+                loop
+                autoplay
+                aria-hidden="true"
+            ></lottie-player>
+
+            <div id="ui-container">
+            <h2 id="message">Please speak your magic words to open the door.</h2>
+            
+            <div class="language-selection">
+                <label>
+                    <input type="radio" name="language" value="vietnamese" checked>
+                    Tiếng Việt
+                </label>
+                <label>
+                    <input type="radio" name="language" value="english">
+                    English
+                </label>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="magicWord" placeholder="Magic words...">
+                <button id="openDoorBtn">Open</button>
+            </div>
+            
+            <div id="status-message">If you don't know the magic words, please ask Daniel.</div>
+        </div>
+    </div>
+
+    <script>
+        // CÁC CHUỖI MÃ HÓA TỪ FILE CỦA BẠN
+        const ENCRYPTED_VIETNAMESE_CV_URL = "ZRGkdAuH5ZolEjuenhYVjZly6OEhGSaixYv1rzZz/YCann9/eipa8VlGFhEGzZpFA/KCmq7wbIWEi7e1PWnGrv2hPn6yJcIUeAin1gteoBU="; 
+        const ENCRYPTED_ENGLISH_CV_URL = "pP+qpZb3ma3GlQkmZaY9lePqX6fUnCo20xWvoIBM3PpoQU/AMxDp+gHga5tKtyi7QKK4fD8AA0JABj3rz4DSaD7NVFdnjM7qRCNSkcTtlG0="; 
+
+        // DOM Elements
+        const STATUS_ELEM = document.getElementById('status-message');
+        const INPUT_WORD = document.getElementById('magicWord');
+        const OPEN_BTN = document.getElementById('openDoorBtn');
+        const UI_CONTAINER = document.getElementById('ui-container');
+        const LEFT_DOOR = document.getElementById('left-door');
+        const RIGHT_DOOR = document.getElementById('right-door');
+        const PORTAL = document.getElementById('portal');
+        const ROBOT_CONTAINER = document.getElementById('robot-lottie');
+
+        
+        function base64ToArrayBuffer(base64) {
+            const binary_string = window.atob(base64);
+            const len = binary_string.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binary_string.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        async function decryptUrl(encryptedBase64, secretKey) {
+            try {
+                const encryptedBuffer = base64ToArrayBuffer(encryptedBase64);
+                const IV_LENGTH = 16;
+                if (encryptedBuffer.byteLength < IV_LENGTH) return null;
+
+                const keyMaterial = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(secretKey));
+                const aesKeyBuffer = keyMaterial.slice(0, 16); 
+                const iv = new Uint8Array(encryptedBuffer.slice(0, IV_LENGTH)); 
+                const encryptedData = encryptedBuffer.slice(IV_LENGTH); 
+
+                const aesKey = await crypto.subtle.importKey(
+                    'raw',
+                    aesKeyBuffer,
+                    { name: 'AES-CBC' },
+                    false,
+                    ['decrypt']
+                );
+
+                const decryptedBuffer = await crypto.subtle.decrypt(
+                    { name: 'AES-CBC', iv: iv },
+                    aesKey,
+                    encryptedData
+                );
+
+                const url = new TextDecoder().decode(decryptedBuffer).trim();
+                return url.replace(/\0/g, ''); 
+                
+            } catch (error) {
+                console.error("❌ Decryption failed.", error);
+                return null; 
+            }
+        }
+
+        /**
+         * Xử lý sự kiện nhấn nút "Open"
+         */
+        async function handleOpenDoor() {
+            STATUS_ELEM.textContent = '';
+            STATUS_ELEM.className = '';
+            OPEN_BTN.disabled = true;
+
+            const inputWord = INPUT_WORD.value.trim();
+
+            if (!inputWord) {
+                STATUS_ELEM.textContent = '❌ Please enter the magic words.';
+                STATUS_ELEM.className = 'error';
+                try { STATUS_ELEM.style.opacity = '1'; } catch (e) {}
+                gsap.fromTo(STATUS_ELEM, { y: 0, scale: 1 }, { y: -6, scale: 1.02, duration: 0.18, yoyo: true, repeat: 1, ease: 'power1.inOut' });
+                OPEN_BTN.disabled = false;
+                return;
+            }
+
+            STATUS_ELEM.textContent = '🔑 Decoding sequence initiated...';
+            STATUS_ELEM.className = '';
+
+            const lang = document.querySelector('input[name="language"]:checked').value;
+            const encryptedUrl = lang === 'vietnamese' ? ENCRYPTED_VIETNAMESE_CV_URL : ENCRYPTED_ENGLISH_CV_URL;
+
+            // Try to decrypt with the user-provided passphrase. We consider the
+            // magic word correct if decryption yields a URL starting with http/https.
+            let decryptedUrl = null;
+            try {
+                decryptedUrl = await decryptUrl(encryptedUrl, inputWord);
+            } catch (e) {
+                console.error('Decryption threw:', e);
+                decryptedUrl = null;
+            }
+
+            if (decryptedUrl && /^https?:\/\//i.test(decryptedUrl)) {
+                STATUS_ELEM.textContent = '✅ Success! Opening portal...';
+                try { STATUS_ELEM.style.opacity = '1'; } catch (e) {}
+
+                // --- BẮT ĐẦU ANIMATION MỞ CỬA BẰNG GSAP ---
+                const tl = gsap.timeline();
+
+                // 1. Ẩn UI
+                tl.to(UI_CONTAINER, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.5,
+                    ease: "power2.in"
+                });
+
+                // 2. Mở 2 cánh cửa (dùng xPercent để chắc chắn)
+                tl.to(LEFT_DOOR, {
+                    xPercent: -100,
+                    duration: 2.0,
+                    ease: "power3.inOut"
+                }, ">");
+                
+                tl.to(RIGHT_DOOR, {
+                    xPercent: 100,
+                    duration: 2.0,
+                    ease: "power3.inOut"
+                }, "<");
+
+                // 3. Hiển thị và phóng to portal từ giữa
+                tl.set(PORTAL, { 
+                    zIndex: 99,
+                    opacity: 0.3 
+                });
+                
+                tl.to(PORTAL, {
+                    opacity: 1,
+                    scale: 2000,
+                    duration: 2.5,
+                    color: "#ffffff",
+                    ease: "power2.in",
+                    onComplete: () => {
+                        // Redirect to the decrypted URL
+                        window.location.href = decryptedUrl;
+                    }
+                }, "-=1.5");
+
+            } else {
+                STATUS_ELEM.textContent = '❌ Incorrect magic word or decryption failed.';
+                STATUS_ELEM.className = 'error';
+                try { STATUS_ELEM.style.opacity = '1'; } catch (e) {}
+                OPEN_BTN.disabled = false;
+                // small attention animation for the status message
+                gsap.fromTo(STATUS_ELEM, { y: 0, scale: 1 }, { y: -6, scale: 1.02, duration: 0.18, yoyo: true, repeat: 1, ease: 'power1.inOut' });
+                // Animation lắc UI
+                gsap.fromTo(UI_CONTAINER, { x: 0 }, {
+                    x: 10, duration: 0.05, repeat: 5, yoyo: true, clearProps: "x"
+                });
+            }
+        }
+        // --- Event Listeners and Initialization ---
+        /**
+         * Run the intro animation sequence: hide loader, reveal UI elements
+         */
+        function runIntro() {
+            const loading = document.getElementById('loadingOverlay');
+            const tl = gsap.timeline();
+
+            // fade out loader
+            tl.to(loading, { opacity: 0, scale: 0.98, duration: 0.6, ease: "power2.inOut", onComplete: () => {
+                if (loading && loading.parentNode) loading.parentNode.removeChild(loading);
+            }});
+
+            // reveal UI container with a gentle pop and slide
+            tl.fromTo("#ui-container", { y: 30, scale: 0.98, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 1.5, ease: "power3.out" }, "-=0.15");
+
+            // robot and text stagger
+            tl.to("#robot-lottie", { opacity: 1, y: -8, duration: 0.6, ease: "power3.out" }, "-=0.7");
+            tl.to("#ui-container h2, #ui-container h3", { opacity: 1, duration: 0.5 }, "-=0.5");
+            tl.to(".language-selection", { opacity: 1, duration: 0.35 }, "-=0.35");
+            tl.to(".input-group", { opacity: 1, duration: 0.35 }, "-=0.3");
+            tl.to("#status-message", { opacity: 1, duration: 0.35 }, "-=0.25");
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // small delay for lottie-player to initialize and for first paint; then run the intro
+            setTimeout(() => runIntro(), 520);
+        });
+
+        OPEN_BTN.addEventListener('click', handleOpenDoor);
+        INPUT_WORD.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                handleOpenDoor();
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,189 @@
+<!--
+Welcome to Daniel World.
+This is the secret info
+Please speak your magic words to open the door.
+
+string url_vietnamese_cv = "https://danthienphuc.github.io/resume/cv1-dev/FD2W4EF5FRVI.html";
+string magic_encrypted_vietnamese_cv_url = "1fiwE/bMjv88tbpuMfo9/wUhspocZTquUL70cFzK1NFn1fHVlww4QmXtKnZ+U54miOGS2j+zABA9RDsc2+HKmA==";
+string url_english_cv = "https://danthienphuc.github.io/resume/cv1-dev/EREROLKLVEEN.html";
+string magic_encrypted_english_cv_url = "1fiwE/bMjv88tbpuMfo9/wUhspocZTquUL70cFzK1NEv7qQzlUo8mnWG3nZeoIul7QfdrtOKUkGNKo0gDM1pFQ==";
+secret string magic_word = "Alohomora";
+algorithm aes-128-cbc-hmac-sha256;
+
+
+hãy viết logic dehash để mở cửa bằng js.
+Hãy sửa file index.html này với:
+- UI là một animation cánh cửa đóng với một con robot webcome đứng bên cạnh hiển thị câu "Please speak your magic words to open the door." phía dưới ở giữa là field input để nhập magic words và một button "Open Door".
+- assets:
+./assets/daniel-space.png : hình nền toàn cảnh với phần cảnh cửa transparrent (nhằm đặt bên trên layer left-door.png và right-door.png)
+./assets/left-door.png : hình cánh cửa bên trái
+./assets/right-door.png : hình cánh cửa bên phải
+
+sử dụng GSAP để làm animation mở cửa và Lottie để render animation con robot
+Cánh cửa sử dụng js để làm animation mở cửa (không dùng Lottie vì chúng ta sử dụng hình ảnh left-door.png và right-door.png để làm cánh cửa đóng) và mở ra bằng keyframe animation.
+sau khi mở, tạo ra một cánh cửa không gian zomm-out dần to ra từ chính giữa cánh cửa tràn toàn màn hình và chuyển sang url decrypted tương ứng.
+
+- Khi nhập đúng magic words và nhấn button "Open Door" thì animation cánh cửa mở ra và chuyển trang đến url đã decrypted vietnamese_cv hoặc url_english_cv tùy theo lựa chọn ngôn ngữ (có thể thêm radio button để chọn ngôn ngữ).
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encryption String Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result-group {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px dashed #007bff;
+            background-color: #e9f5ff;
+            border-radius: 4px;
+        }
+        h2 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🔑 Encryption String Generator (AES-128-CBC)</h1>
+        <p>Sử dụng công cụ này để tạo chuỗi mã hóa mới, đảm bảo đồng bộ với logic giải mã trong file `index.html`.</p>
+
+        <label for="magicWordInput">Magic Word (Khóa Bí Mật):</label>
+        <input type="text" id="magicWordInput" value="Alohomora">
+
+        <hr>
+
+        <h2>URL (Vietnamese CV)</h2>
+        <input type="text" id="urlVietnamese" 
+               value="https://danthienphuc.github.io/resume/cv1-dev/FD2W4EF5FRVI.html">
+        <button onclick="generateEncryptedString('vietnamese')">Generate Vietnamese CV String</button>
+        <div class="result-group" id="resultVietnamese"></div>
+
+        <hr>
+
+        <h2>URL (English CV)</h2>
+        <input type="text" id="urlEnglish" 
+               value="https://danthienphuc.github.io/resume/cv1-dev/EREROLKLVEEN.html">
+        <button onclick="generateEncryptedString('english')">Generate English CV String</button>
+        <div class="result-group" id="resultEnglish"></div>
+    </div>
+
+    <script>
+        /**
+         * Chuyển ArrayBuffer thành Base64 string
+         * @param {ArrayBuffer} buffer 
+         * @returns {string}
+         */
+        function arrayBufferToBase64(buffer) {
+            let binary = '';
+            const bytes = new Uint8Array(buffer);
+            const len = bytes.byteLength;
+            for (let i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return window.btoa(binary);
+        }
+
+        /**
+         * Hàm mã hóa AES-128-CBC
+         * @param {string} url - URL cần mã hóa
+         * @param {string} secretKey - Khóa bí mật (Magic Word)
+         * @param {string} type - Loại CV (vietnamese/english)
+         */
+        async function generateEncryptedString(type) {
+            const urlElement = type === 'vietnamese' ? document.getElementById('urlVietnamese') : document.getElementById('urlEnglish');
+            const resultElement = type === 'vietnamese' ? document.getElementById('resultVietnamese') : document.getElementById('resultEnglish');
+            const url = urlElement.value.trim();
+            const secretKey = document.getElementById('magicWordInput').value.trim();
+
+            if (!url || !secretKey) {
+                resultElement.innerHTML = `<p style="color:red;">Vui lòng nhập URL và Magic Word.</p>`;
+                return;
+            }
+
+            try {
+                // --- 1. Tạo Khóa AES (128-bit = 16 bytes) ---
+                // Dùng SHA-256 của SecretKey và lấy 16 bytes đầu tiên làm AES Key (Đồng bộ với hàm decrypt)
+                const keyMaterial = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(secretKey));
+                const aesKeyBuffer = keyMaterial.slice(0, 16); 
+
+                // --- 2. Tạo IV ngẫu nhiên ---
+                const iv = crypto.getRandomValues(new Uint8Array(16));
+
+                // --- 3. Import Khóa AES ---
+                const aesKey = await crypto.subtle.importKey(
+                    'raw',
+                    aesKeyBuffer,
+                    { name: 'AES-CBC' },
+                    false,
+                    ['encrypt']
+                );
+
+                // --- 4. Mã hóa ---
+                const dataToEncrypt = new TextEncoder().encode(url);
+                const encryptedBuffer = await crypto.subtle.encrypt(
+                    { name: 'AES-CBC', iv: iv },
+                    aesKey,
+                    dataToEncrypt
+                );
+                
+                // --- 5. Nối IV và Encrypted Data (Đồng bộ với hàm decrypt) ---
+                // IV (16 bytes) + Encrypted Data
+                const fullBuffer = new Uint8Array(iv.byteLength + encryptedBuffer.byteLength);
+                fullBuffer.set(iv, 0);
+                fullBuffer.set(new Uint8Array(encryptedBuffer), iv.byteLength);
+
+                // --- 6. Chuyển sang Base64 ---
+                const encryptedBase64 = arrayBufferToBase64(fullBuffer.buffer);
+
+                resultElement.innerHTML = `
+                    <p>Chuỗi mã hóa mới đã tạo thành công:</p>
+                    <textarea rows="4">${encryptedBase64}</textarea>
+                    <p style="color:green; font-weight:bold;">Copy chuỗi này và dán vào file HTML chính của bạn.</p>
+                `;
+            } catch (error) {
+                console.error("Encryption failed:", error);
+                resultElement.innerHTML = `<p style="color:red;">Lỗi trong quá trình mã hóa: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
