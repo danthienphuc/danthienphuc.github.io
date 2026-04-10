@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mai Van Phuc - Fullstack Marketing CV</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+            --sidebar-bg: #fdfdfe;
+            --main-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Container for each A4 page */
+        .a4-page {
+            width: 210mm;
+            height: 297mm;
+            margin: 20px auto;
+            background: var(--main-bg);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            page-break-after: always;
+            overflow: hidden;
+        }
+
+        @media print {
+            body { background: none; }
+            .a4-page {
+                margin: 0;
+                box-shadow: none;
+                width: 210mm;
+                height: 297mm;
+            }
+            .no-print { display: none; }
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Plus+Jakarta+Sans', sans-serif;
+        }
+
+        .gradient-bg {
+            background: var(--primary-gradient);
+        }
+
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #4338ca;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #eef2ff;
+            padding-bottom: 0.25rem;
+        }
+
+        .card-job {
+            border-radius: 1.25rem;
+            border: 1px solid #f1f5f9;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            background: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        .label-pill {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.5rem;
+            background: #eef2ff;
+            color: #4338ca;
+            margin-right: 0.5rem;
+            display: inline-block;
+        }
+
+        .skill-tag {
+            background: #f8fafc;
+            padding: 0.3rem 0.7rem;
+            border-radius: 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #475569;
+            margin: 0.15rem;
+            display: inline-block;
+            border: 1px solid #e2e8f0;
+        }
+
+        .profile-img {
+            width: 110px;
+            height: 110px;
+            border-radius: 2.25rem;
+            border: 4px solid rgba(255, 255, 255, 0.4);
+            object-fit: cover;
+        }
+
+        .list-dot {
+            position: relative;
+            padding-left: 1rem;
+        }
+        .list-dot::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #6366f1;
+            font-weight: bold;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            flex: 1;
+        }
+
+        .sidebar {
+            background: #fcfdfe;
+            padding: 2rem 1.5rem;
+            border-right: 1px solid #f1f5f9;
+        }
+
+        .main-content {
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print fixed top-4 right-4 z-50 flex gap-2">
+        <button onclick="window.print()" class="bg-indigo-600 text-white px-6 py-2 rounded-full shadow-lg hover:bg-indigo-700 transition-all font-bold">
+            <i class="fas fa-print mr-2"></i> PRINT CV
+        </button>
+    </div>
+
+    <!-- PAGE 1 -->
+    <div class="a4-page">
+        <!-- Header -->
+        <header class="gradient-bg p-10 text-white flex justify-between items-center rounded-b-[4rem] shadow-xl">
+            <div class="flex-1">
+                <h1 class="text-5xl font-extrabold mb-1 tracking-tight">MAI VAN PHUC</h1>
+                <p class="text-xl font-bold opacity-90 uppercase tracking-[0.2em] mb-1">Fullstack Marketing Leader</p>
+                <p class="text-[0.95rem] font-medium opacity-80 italic mb-6">"Bridging the Gap between Technology and the Art of Sales"</p>
+                <div class="grid grid-cols-2 gap-x-8 gap-y-3 text-[0.8rem] font-medium">
+                    <span class="flex items-center"><i class="fas fa-phone-alt w-5 mr-2"></i> +84 899 900 910</span>
+                    <span class="flex items-center"><i class="fas fa-envelope w-5 mr-2"></i> danthienphuc@gmail.com</span>
+                    <span class="flex items-center"><i class="fas fa-map-marker-alt w-5 mr-2"></i> Ho Chi Minh City, VN</span>
+                    <a href="https://danthienphuc.github.io/" class="flex items-center hover:underline"><i class="fas fa-globe w-5 mr-2"></i> danthienphuc.io</a>
+                </div>
+            </div>
+            <div class="flex flex-col items-center ml-8">
+                <img src="https://via.placeholder.com/110" alt="Mai Van Phuc" class="profile-img mb-3 shadow-2xl">
+                <div class="bg-white/20 px-4 py-1.5 rounded-full text-[0.7rem] font-bold backdrop-blur-md uppercase tracking-wider border border-white/20">
+                    8 Years of Experience
+                </div>
+            </div>
+        </header>
+
+        <div class="grid-layout">
+            <!-- Sidebar Page 1 -->
+            <aside class="sidebar flex flex-col gap-8">
+                <div>
+                    <h3 class="section-title"><i class="fas fa-user-astronaut mr-2"></i> Profile</h3>
+                    <p class="text-[0.8rem] text-slate-600 leading-relaxed text-justify">
+                        Fullstack Marketing Expert with an <strong>IT Engineering</strong> background. 8 years of experience integrating <strong>Creative Content</strong> with <strong>Marketing Automation</strong>. Specialized in building data-driven systems and AI solutions to accelerate revenue growth.
+                    </p>
+                </div>
+
+                <div>
+                    <h3 class="section-title"><i class="fas fa-th-large mr-2"></i> Key Expertise</h3>
+                    <ul class="text-[0.75rem] text-slate-700 space-y-2 font-medium">
+                        <li class="list-dot">Graphic Design & SEO UX/UI</li>
+                        <li class="list-dot">Market Research & Analysis</li>
+                        <li class="list-dot">Omnichannel Digital Strategy</li>
+                        <li class="list-dot">Multi-platform Ads (GG/FB/TikTok)</li>
+                        <li class="list-dot">Brand Mgmt & Digital Content</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="section-title"><i class="fas fa-palette mr-2"></i> Creative Skills</h3>
+                    <div class="flex flex-wrap">
+                        <span class="skill-tag">Adobe Suite (Ps/Ai/Id)</span>
+                        <span class="skill-tag">Figma / Adobe XD</span>
+                        <span class="skill-tag">Premiere / After Effects</span>
+                        <span class="skill-tag">Video Production</span>
+                        <span class="skill-tag">Brand Identity</span>
+                        <span class="skill-tag">Photography & Retouch</span>
+                        <span class="skill-tag">Livestream Scripting</span>
+                    </div>
+                </div>
+
+                <div class="mt-auto opacity-40 text-center italic text-[0.6rem]">
+                    Continued on next page...
+                </div>
+            </aside>
+
+            <!-- Main Content Page 1 -->
+            <main class="main-content">
+                <h3 class="section-title mb-6"><i class="fas fa-history mr-2"></i> Recent Professional Experience</h3>
+
+                <!-- Hằng Underwear -->
+                <div class="card-job">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="text-[0.95rem] font-bold text-slate-800 uppercase tracking-tight">Fullstack Marketing Leader</h4>
+                        <span class="text-[0.7rem] font-bold text-indigo-500 bg-indigo-50 px-3 py-1 rounded-full">06/2025 - 12/2025</span>
+                    </div>
+                    <p class="text-[0.85rem] font-bold text-indigo-700 mb-3">Hang Underwear (Fashion Retail) - HCMC</p>
+                    
+                    <div class="space-y-2 text-[0.75rem] text-slate-600 leading-relaxed">
+                        <p><span class="label-pill">Responsibilities</span> Orchestrated comprehensive Marketing plans; Coordinated creative, content, and digital teams; Managed multi-platform ad campaigns; Produced viral video content & livestream scripts.</p>
+                        <p><span class="label-pill">Skills Used</span> Content Strategy, Video Production, Ads Optimization, Team Leadership, E-commerce Growth.</p>
+                        <div class="bg-amber-50 p-3 rounded-xl border-l-4 border-amber-400">
+                            <p class="font-bold text-slate-800 text-[0.8rem]"><i class="fas fa-trophy text-amber-500 mr-2"></i>Key Achievement</p>
+                            <p class="mt-1">Scaled monthly revenue from <span class="text-indigo-600 font-extrabold">2M to 70M VND</span> within 6 months. Executed high-converting Flash Sale campaigns across Shopee, Facebook, and Instagram.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dương Gia Phát -->
+                <div class="card-job">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="text-[0.95rem] font-bold text-slate-800 uppercase tracking-tight">Design & Digital Ads Specialist</h4>
+                        <span class="text-[0.7rem] font-bold text-indigo-500 bg-indigo-50 px-3 py-1 rounded-full">11/2021 - 03/2024</span>
+                    </div>
+                    <p class="text-[0.85rem] font-bold text-indigo-700 mb-3">Duong Gia Phat Printing Co., Ltd (CSA VN)</p>
+                    
+                    <div class="space-y-2 text-[0.75rem] text-slate-600 leading-relaxed">
+                        <p><span class="label-pill">Responsibilities</span> Developed high-end brand identities and packaging; Designed SEO-friendly, responsive web interfaces; Managed and optimized Google/Facebook Ads performance.</p>
+                        <p><span class="label-pill">Skills Used</span> Adobe Ps/Ai, WordPress, Google Ads Manager, Analytics, Technical SEO.</p>
+                        <div class="bg-amber-50 p-3 rounded-xl border-l-4 border-amber-400">
+                            <p class="font-bold text-slate-800 text-[0.8rem]"><i class="fas fa-trophy text-amber-500 mr-2"></i>Key Achievement</p>
+                            <p class="mt-1">Successfully completed <span class="text-indigo-600 font-extrabold">100+ design projects</span>. Marketing campaigns generated 50+ high-value B2B orders (largest deal worth <span class="text-indigo-600 font-extrabold">120M VND</span>).</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div class="a4-page">
+        <div class="grid-layout">
+            <!-- Sidebar Page 2 -->
+            <aside class="sidebar flex flex-col gap-8">
+                <div>
+                    <h3 class="section-title"><i class="fas fa-code mr-2"></i> Tech & Automation</h3>
+                    <div class="flex flex-wrap">
+                        <span class="skill-tag">Python / Node.js</span>
+                        <span class="skill-tag">Marketing Automation (n8n)</span>
+                        <span class="skill-tag">Chatbot AI / Flow Builder</span>
+                        <span class="skill-tag">Technical SEO</span>
+                        <span class="skill-tag">HTML / CSS / JS</span>
+                        <span class="skill-tag">React / Vue.js / Vite</span>
+                        <span class="skill-tag">OpenClaw / AI Agents</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="section-title"><i class="fas fa-graduation-cap mr-2"></i> Education</h3>
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                        <h4 class="text-[0.75rem] font-bold text-slate-800 uppercase">IT Engineering</h4>
+                        <p class="text-[0.7rem] text-indigo-600 font-bold mb-1 italic">HUTECH University (2018 - 2022)</p>
+                        <p class="text-[0.7rem] text-slate-500 font-medium">GPA: 3.29 / 4.0</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="section-title"><i class="fas fa-language mr-2"></i> Languages</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-[0.75rem] font-bold mb-1">
+                                <span>Vietnamese</span>
+                                <span class="text-indigo-600">Native</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                                <div class="gradient-bg h-full w-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[0.75rem] font-bold mb-1">
+                                <span>English</span>
+                                <span class="text-indigo-600">Communication</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                                <div class="gradient-bg h-full w-[75%]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-auto text-center border-t border-slate-100 pt-6">
+                    <p class="text-[0.65rem] text-slate-400 font-bold uppercase tracking-widest leading-loose">
+                        Creative Technology<br>Data-Driven Marketing<br>Brand Growth
+                    </p>
+                </div>
+            </aside>
+
+            <!-- Main Content Page 2 -->
+            <main class="main-content">
+                <!-- Tâm Toàn Thắng -->
+                <div class="card-job">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="text-[0.95rem] font-bold text-slate-800 uppercase tracking-tight">Design & Marketing Specialist</h4>
+                        <span class="text-[0.7rem] font-bold text-indigo-500 bg-indigo-50 px-3 py-1 rounded-full">07/2018 - 04/2022</span>
+                    </div>
+                    <p class="text-[0.85rem] font-bold text-indigo-700 mb-3">Tam Toan Thang Real Estate Investment JSC</p>
+                    
+                    <div class="space-y-2 text-[0.75rem] text-slate-600 leading-relaxed">
+                        <p><span class="label-pill">Responsibilities</span> Crafted overall Digital Marketing strategies; Designed logos, visual assets, and UI/UX for smart parking solutions; Managed omnichannel ad campaigns.</p>
+                        <p><span class="label-pill">Skills Used</span> Figma, Illustrator, WordPress, Google Analytics, Technical SEO.</p>
+                        <div class="bg-amber-50 p-3 rounded-xl border-l-4 border-amber-400">
+                            <p class="font-bold text-slate-800 text-[0.8rem]"><i class="fas fa-trophy text-amber-500 mr-2"></i>Key Achievement</p>
+                            <p class="mt-1">Delivered <span class="text-indigo-600 font-extrabold">100+ creative & marketing projects</span>. Increased website organic traffic by <span class="text-indigo-600 font-extrabold">150%</span> within a year through SEO optimization.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Minor History -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="card-job !p-4 !mb-0">
+                        <h4 class="text-[0.75rem] font-bold text-slate-800 uppercase">Photo Editor</h4>
+                        <p class="text-[0.7rem] text-indigo-600 font-bold mb-1">ESOFTFLOW | 2018</p>
+                        <p class="text-[0.65rem] text-slate-500 italic">Advanced real estate photo editing for international markets using Ps & Lr.</p>
+                    </div>
+                    <div class="card-job !p-4 !mb-0">
+                        <h4 class="text-[0.75rem] font-bold text-slate-800 uppercase">Printing Assistant</h4>
+                        <p class="text-[0.7rem] text-indigo-600 font-bold mb-1">Ho Guom Printing | 2017</p>
+                        <p class="text-[0.65rem] text-slate-500 italic">Operated digital printing machinery and handled post-print finishing.</p>
+                    </div>
+                </div>
+
+                <!-- Personal Projects -->
+                <h3 class="section-title mt-6 mb-4"><i class="fas fa-lightbulb mr-2"></i> Personal Projects & Digital Initiatives</h3>
+                
+                <div class="space-y-4">
+                    <div class="bg-indigo-900 rounded-[2rem] p-6 text-white shadow-xl">
+                        <h5 class="text-[0.9rem] font-bold text-indigo-300 mb-2">Digital Apostles - Bui Chu Diocese (Volunteer)</h5>
+                        <p class="text-[0.75rem] text-indigo-50 px-2 leading-relaxed mb-4">
+                            Leading digital transformation in community communication. Building content strategies, managing social channels, and organizing creative virtual events to engage followers.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[0.6rem] bg-indigo-800 px-2 py-1 rounded-md">Content Strategy</span>
+                            <span class="text-[0.6rem] bg-indigo-800 px-2 py-1 rounded-md">Event Management</span>
+                            <span class="text-[0.6rem] bg-indigo-800 px-2 py-1 rounded-md">Social Admin</span>
+                        </div>
+                    </div>
+
+                    <div class="card-job border-2 border-indigo-100 !mb-0">
+                        <h5 class="text-[0.9rem] font-bold text-indigo-700 mb-2">Marketing Automation & AI Lab</h5>
+                        <p class="text-[0.75rem] text-slate-600 leading-relaxed mb-4">
+                            Independently researching and applying <strong>N8N & OpenClaw</strong> to automate sales funnels, building intelligent AI Chatbots, and optimizing data harvesting workflows.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-tag">N8N</span>
+                            <span class="skill-tag">AI Agent</span>
+                            <span class="skill-tag">Data Scraping</span>
+                            <span class="skill-tag">API Integration</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Footer Page 2 -->
+        <footer class="bg-slate-50 py-6 px-10 text-center rounded-t-[4rem] mt-auto border-t border-slate-100">
+            <div class="flex justify-center gap-10 mb-4">
+                <span class="text-[0.7rem] text-indigo-600 font-bold uppercase tracking-wider"><i class="fab fa-github mr-2"></i> danthienphuc</span>
+                <span class="text-[0.7rem] text-indigo-600 font-bold uppercase tracking-wider"><i class="fab fa-linkedin mr-2"></i> in/danthienphuc</span>
+            </div>
+            <p class="text-[0.6rem] text-slate-400 font-medium">Design Copyright © 2026 Mai Van Phuc</p>
+        </footer>
+    </div>
+
+</body>
+</html>

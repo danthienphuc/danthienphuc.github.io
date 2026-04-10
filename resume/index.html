@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mai Van Phuc - Portfolio Gateway</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Lottie Player -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #10b981;
+            --accent: #f43f5e;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .font-heading {
+            font-family: 'Plus+Jakarta+Sans', sans-serif;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Animated Background Blobs */
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: -1;
+            animation: move 20s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(-10%, -10%) scale(1); }
+            to { transform: translate(20%, 20%) scale(1.2); }
+        }
+
+        /* Custom Radio Styling */
+        .selector-card {
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+
+        .selector-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="radio"]:checked + .selector-card {
+            border-color: var(--primary);
+            background: white;
+            transform: scale(1.02);
+        }
+
+        input[type="radio"]:checked + .selector-card .icon-box {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+        }
+
+        .icon-box {
+            transition: all 0.3s ease;
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        /* Portal Transition */
+        #portalOverlay {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 100;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .portal-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, #6366f1 0%, #10b981 100%);
+            border-radius: 50%;
+            transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .portal-active .portal-circle {
+            transform: translate(-50%, -50%) scale(300);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -10px rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-gradient:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            filter: grayscale(1);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="blob" style="top: -100px; left: -100px;"></div>
+    <div class="blob" style="bottom: -100px; right: -100px; animation-delay: -5s;"></div>
+
+    <div id="portalOverlay">
+        <div class="portal-circle"></div>
+    </div>
+
+    <main class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative">
+        
+        <!-- Left Side: Branding -->
+        <div class="space-y-8 text-center lg:text-left p-4">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 font-bold text-sm tracking-wide animate-bounce">
+                <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
+                WELCOME RECRUITER
+            </div>
+            
+            <div class="space-y-4">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-slate-900 leading-tight">
+                    Explore My <span class="gradient-text bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-emerald-500 italic">Portfolio</span>
+                </h1>
+                <p class="text-xl text-slate-500 font-medium italic">
+                    "Bridging the Gap between Technology and the Art of Sales"
+                </p>
+            </div>
+
+            <div id="lottieContainer" class="w-full max-w-sm mx-auto lg:mx-0 drop-shadow-2xl"></div>
+
+            <p class="text-slate-400 text-sm font-medium">
+                Choose the version of my professional journey that matches your needs.
+            </p>
+        </div>
+
+        <!-- Right Side: Selection Form -->
+        <section class="glass-card rounded-[3rem] p-8 md:p-12 space-y-8">
+            <div class="text-center lg:text-left">
+                <h2 class="text-3xl font-bold text-slate-800">Which role are you hiring for?</h2>
+                <p class="text-slate-500 mt-2">I will redirect you to the most relevant resume.</p>
+            </div>
+
+            <form id="cvForm" class="space-y-6">
+                <!-- Option 1: Developer -->
+                <div class="relative">
+                    <input type="radio" name="cvType" value="dev" id="dev" class="hidden peer">
+                    <label for="dev" class="selector-card flex items-center p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 peer-checked:bg-white">
+                        <div class="icon-box w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mr-6">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-xl text-slate-800">Engineering & Tech</h3>
+                            <p class="text-sm text-slate-500">Software Engineer, Developer, AI Architect roles.</p>
+                        </div>
+                        <div class="w-6 h-6 rounded-full border-2 border-slate-200 flex items-center justify-center peer-checked:border-indigo-600">
+                            <div class="w-3 h-3 rounded-full bg-indigo-600 scale-0 transition-transform peer-checked:scale-100"></div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Option 2: Marketing -->
+                <div class="relative">
+                    <input type="radio" name="cvType" value="marketing" id="marketing" class="hidden peer">
+                    <label for="marketing" class="selector-card flex items-center p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 peer-checked:bg-white">
+                        <div class="icon-box w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mr-6">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-xl text-slate-800">Marketing & Design</h3>
+                            <p class="text-sm text-slate-500">Brand Manager, Creative Director, Ads Specialist.</p>
+                        </div>
+                        <div class="w-6 h-6 rounded-full border-2 border-slate-200 flex items-center justify-center"></div>
+                    </label>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" id="submitBtn" disabled class="btn-gradient w-full py-5 rounded-2xl text-white font-bold text-lg shadow-xl uppercase tracking-widest">
+                        Proceed to Resume <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                    <p id="statusMsg" class="text-center text-sm font-semibold mt-4 text-slate-400 h-6"></p>
+                </div>
+            </form>
+
+            <!-- Trust Badges -->
+            <div class="pt-8 border-t border-slate-100 flex justify-center gap-8 opacity-40 grayscale hover:grayscale-0 transition-all">
+                <i class="fab fa-python text-3xl"></i>
+                <i class="fab fa-js-square text-3xl"></i>
+                <i class="fab fa-figma text-3xl"></i>
+                <i class="fab fa-google text-3xl"></i>
+                <i class="fab fa-facebook text-3xl"></i>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Redirect Map
+        const urls = {
+            dev: './cv1-dev/index.html',
+            marketing: './cv2-des-mark/index.html'
+        };
+
+        const form = document.getElementById('cvForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMsg = document.getElementById('statusMsg');
+        const overlay = document.getElementById('portalOverlay');
+
+        // Load Lottie Robot
+        const animation = lottie.loadAnimation({
+            container: document.getElementById('lottieContainer'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'https://assets5.lottiefiles.com/packages/lf20_w51pcehl.json' // Friendly waving robot
+        });
+
+        // Handle Radio Changes
+        form.addEventListener('change', () => {
+            const selected = document.querySelector('input[name="cvType"]:checked');
+            if (selected) {
+                submitBtn.disabled = false;
+                statusMsg.innerText = `Selected: ${selected.value === 'dev' ? 'Technical Resume' : 'Creative Resume'}`;
+                statusMsg.classList.add('text-indigo-600');
+            }
+        });
+
+        // Handle Form Submission
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const selected = document.querySelector('input[name="cvType"]:checked').value;
+            
+            // Start Portal Animation
+            overlay.style.display = 'block';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                document.body.classList.add('portal-active');
+            }, 10);
+
+            // Redirect after animation
+            setTimeout(() => {
+                window.location.href = urls[selected];
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
