@@ -36,7 +36,7 @@
             print-color-adjust: exact;
         }
 
-        /* Container for each A4 page */
+        /* A4 Page Container */
         .a4-page {
             width: 210mm;
             height: 297mm;
@@ -57,11 +57,19 @@
                 box-shadow: none;
                 width: 210mm;
                 height: 297mm;
+                display: flex !important;
+                overflow: visible !important; /* Critical fix for disappearing content */
             }
-            .no-print { display: none; }
+            .no-print {
+                display: none !important;
+            }
+            .sidebar {
+                background: #fcfdfe !important;
+                -webkit-print-color-adjust: exact;
+            }
         }
 
-        h1, h2, h3, h4, .font-heading {
+        h1, .font-heading {
             font-family: 'Plus+Jakarta+Sans', sans-serif;
         }
 
@@ -81,11 +89,11 @@
             color: #4338ca;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.85rem;
             display: flex;
             align-items: center;
             border-bottom: 2px solid #eef2ff;
-            padding-bottom: 0.25rem;
+            padding-bottom: 0.35rem;
         }
 
         .card-job {
@@ -120,24 +128,36 @@
             border: 1px solid #e2e8f0;
         }
 
+        /* List Items: Using Flexbox instead of Absolute Positioning to fix print rendering issues */
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .list-dot {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            font-size: 0.75rem;
+            color: #334155;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        .list-dot::before {
+            content: "•";
+            color: #6366f1;
+            font-weight: 900;
+            font-size: 1.2rem;
+            line-height: 1;
+            margin-top: -0.1rem;
+        }
+
         .profile-img {
             width: 110px;
             height: 110px;
             border-radius: 2.25rem;
             border: 4px solid rgba(255, 255, 255, 0.4);
             object-fit: cover;
-        }
-
-        .list-dot {
-            position: relative;
-            padding-left: 1rem;
-        }
-        .list-dot::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            color: #6366f1;
-            font-weight: bold;
         }
 
         .grid-layout {
@@ -148,12 +168,12 @@
 
         .sidebar {
             background: #fcfdfe;
-            padding: 2rem 1.5rem;
+            padding: 2.25rem 1.5rem;
             border-right: 1px solid #f1f5f9;
         }
 
         .main-content {
-            padding: 2rem;
+            padding: 2.25rem;
         }
     </style>
 </head>
@@ -171,7 +191,7 @@
         <header class="gradient-bg p-10 text-white flex justify-between items-center rounded-b-[4rem] shadow-xl">
             <div class="flex-1">
                 <h1 class="text-5xl font-extrabold mb-1 tracking-tight">MAI VAN PHUC</h1>
-                <p class="text-xl font-bold opacity-90 uppercase tracking-[0.2em] mb-1">Fullstack Marketing Leader</p>
+                <p class="text-xl font-bold opacity-90 uppercase tracking-[0.2em] mb-1">Fullstack Marketing</p>
                 <p class="text-[0.95rem] font-medium opacity-80 italic mb-6">"Bridging the Gap between Technology and the Art of Sales"</p>
                 <div class="grid grid-cols-2 gap-x-8 gap-y-3 text-[0.8rem] font-medium">
                     <span class="flex items-center"><i class="fas fa-phone-alt w-5 mr-2"></i> +84 899 900 910</span>
@@ -181,7 +201,7 @@
                 </div>
             </div>
             <div class="flex flex-col items-center ml-8">
-                <img src="https://via.placeholder.com/110" alt="Mai Van Phuc" class="profile-img mb-3 shadow-2xl">
+                <img src="../00-info/daniel-passport.jpg" alt="Mai Van Phuc" class="profile-img mb-3 shadow-2xl">
                 <div class="bg-white/20 px-4 py-1.5 rounded-full text-[0.7rem] font-bold backdrop-blur-md uppercase tracking-wider border border-white/20">
                     8 Years of Experience
                 </div>
@@ -193,20 +213,20 @@
             <aside class="sidebar flex flex-col gap-8">
                 <div>
                     <h3 class="section-title"><i class="fas fa-user-astronaut mr-2"></i> Profile</h3>
-                    <p class="text-[0.8rem] text-slate-600 leading-relaxed text-justify">
+                    <p class="text-[0.8rem] text-slate-700 leading-relaxed text-justify">
                         Fullstack Marketing Expert with an <strong>IT Engineering</strong> background. 8 years of experience integrating <strong>Creative Content</strong> with <strong>Marketing Automation</strong>. Specialized in building data-driven systems and AI solutions to accelerate revenue growth.
                     </p>
                 </div>
 
                 <div>
                     <h3 class="section-title"><i class="fas fa-th-large mr-2"></i> Key Expertise</h3>
-                    <ul class="text-[0.75rem] text-slate-700 space-y-2 font-medium">
-                        <li class="list-dot">Graphic Design & SEO UX/UI</li>
-                        <li class="list-dot">Market Research & Analysis</li>
-                        <li class="list-dot">Omnichannel Digital Strategy</li>
-                        <li class="list-dot">Multi-platform Ads (GG/FB/TikTok)</li>
-                        <li class="list-dot">Brand Mgmt & Digital Content</li>
-                    </ul>
+                    <div class="list-container">
+                        <div class="list-dot">Graphic Design & SEO UX/UI</div>
+                        <div class="list-dot">Market Research & Competitor Analysis</div>
+                        <div class="list-dot">Omnichannel Digital Strategy</div>
+                        <div class="list-dot">Multi-platform Ads (GG/FB/TikTok)</div>
+                        <div class="list-dot">Brand Mgmt & Digital Content</div>
+                    </div>
                 </div>
 
                 <div>
@@ -242,9 +262,9 @@
                     <div class="space-y-2 text-[0.75rem] text-slate-600 leading-relaxed">
                         <p><span class="label-pill">Responsibilities</span> Orchestrated comprehensive Marketing plans; Coordinated creative, content, and digital teams; Managed multi-platform ad campaigns; Produced viral video content & livestream scripts.</p>
                         <p><span class="label-pill">Skills Used</span> Content Strategy, Video Production, Ads Optimization, Team Leadership, E-commerce Growth.</p>
-                        <div class="bg-amber-50 p-3 rounded-xl border-l-4 border-amber-400">
+                        <div class="bg-amber-50 p-3 rounded-xl border-l-4 border-amber-400 shadow-sm">
                             <p class="font-bold text-slate-800 text-[0.8rem]"><i class="fas fa-trophy text-amber-500 mr-2"></i>Key Achievement</p>
-                            <p class="mt-1">Scaled monthly revenue from <span class="text-indigo-600 font-extrabold">2M to 70M VND</span> within 6 months. Executed high-converting Flash Sale campaigns across Shopee, Facebook, and Instagram.</p>
+                            <p class="mt-1 text-slate-700">Scaled monthly revenue from <span class="text-indigo-600 font-extrabold">2M to 70M VND</span> within 6 months. Executed high-converting Flash Sale campaigns across Shopee, Facebook, and Instagram.</p>
                         </div>
                     </div>
                 </div>
@@ -260,9 +280,9 @@
                     <div class="space-y-2 text-[0.75rem] text-slate-600 leading-relaxed">
                         <p><span class="label-pill">Responsibilities</span> Developed high-end brand identities and packaging; Designed SEO-friendly, responsive web interfaces; Managed and optimized Google/Facebook Ads performance.</p>
                         <p><span class="label-pill">Skills Used</span> Adobe Ps/Ai, WordPress, Google Ads Manager, Analytics, Technical SEO.</p>
-                        <div class="bg-amber-50 p-3 rounded-xl border-l-4 border-amber-400">
+                        <div class="bg-amber-50 p-3 rounded-xl border-l-4 border-amber-400 shadow-sm">
                             <p class="font-bold text-slate-800 text-[0.8rem]"><i class="fas fa-trophy text-amber-500 mr-2"></i>Key Achievement</p>
-                            <p class="mt-1">Successfully completed <span class="text-indigo-600 font-extrabold">100+ design projects</span>. Marketing campaigns generated 50+ high-value B2B orders (largest deal worth <span class="text-indigo-600 font-extrabold">120M VND</span>).</p>
+                            <p class="mt-1 text-slate-700">Successfully completed <span class="text-indigo-600 font-extrabold">100+ design projects</span>. Marketing campaigns generated 50+ high-value B2B orders (largest deal worth <span class="text-indigo-600 font-extrabold">120M VND</span>).</p>
                         </div>
                     </div>
                 </div>
@@ -341,24 +361,24 @@
                     <div class="space-y-2 text-[0.75rem] text-slate-600 leading-relaxed">
                         <p><span class="label-pill">Responsibilities</span> Crafted overall Digital Marketing strategies; Designed logos, visual assets, and UI/UX for smart parking solutions; Managed omnichannel ad campaigns.</p>
                         <p><span class="label-pill">Skills Used</span> Figma, Illustrator, WordPress, Google Analytics, Technical SEO.</p>
-                        <div class="bg-amber-50 p-3 rounded-xl border-l-4 border-amber-400">
+                        <div class="bg-amber-50 p-3 rounded-xl border-l-4 border-amber-400 shadow-sm">
                             <p class="font-bold text-slate-800 text-[0.8rem]"><i class="fas fa-trophy text-amber-500 mr-2"></i>Key Achievement</p>
-                            <p class="mt-1">Delivered <span class="text-indigo-600 font-extrabold">100+ creative & marketing projects</span>. Increased website organic traffic by <span class="text-indigo-600 font-extrabold">150%</span> within a year through SEO optimization.</p>
+                            <p class="mt-1 text-slate-700">Delivered <span class="text-indigo-600 font-extrabold">100+ creative & marketing projects</span>. Increased website organic traffic by <span class="text-indigo-600 font-extrabold">150%</span> within a year through SEO optimization.</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Minor History -->
                 <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="card-job !p-4 !mb-0">
-                        <h4 class="text-[0.75rem] font-bold text-slate-800 uppercase">Photo Editor</h4>
+                    <div class="card-job !p-4 !mb-0 shadow-sm">
+                        <h4 class="text-[0.75rem] font-bold text-slate-800 uppercase text-xs">Photo Editor</h4>
                         <p class="text-[0.7rem] text-indigo-600 font-bold mb-1">ESOFTFLOW | 2018</p>
-                        <p class="text-[0.65rem] text-slate-500 italic">Advanced real estate photo editing for international markets using Ps & Lr.</p>
+                        <p class="text-[0.65rem] text-slate-500 italic leading-tight">Advanced real estate photo editing for international markets using Photoshop & Lightroom.</p>
                     </div>
-                    <div class="card-job !p-4 !mb-0">
-                        <h4 class="text-[0.75rem] font-bold text-slate-800 uppercase">Printing Assistant</h4>
+                    <div class="card-job !p-4 !mb-0 shadow-sm">
+                        <h4 class="text-[0.75rem] font-bold text-slate-800 uppercase text-xs">Printing Assistant</h4>
                         <p class="text-[0.7rem] text-indigo-600 font-bold mb-1">Ho Guom Printing | 2017</p>
-                        <p class="text-[0.65rem] text-slate-500 italic">Operated digital printing machinery and handled post-print finishing.</p>
+                        <p class="text-[0.65rem] text-slate-500 italic leading-tight">Operated digital printing machinery and handled post-print finishing.</p>
                     </div>
                 </div>
 
@@ -368,8 +388,8 @@
                 <div class="space-y-4">
                     <div class="bg-indigo-900 rounded-[2rem] p-6 text-white shadow-xl">
                         <h5 class="text-[0.9rem] font-bold text-indigo-300 mb-2">Digital Apostles - Bui Chu Diocese (Volunteer)</h5>
-                        <p class="text-[0.75rem] text-indigo-50 px-2 leading-relaxed mb-4">
-                            Leading digital transformation in community communication. Building content strategies, managing social channels, and organizing creative virtual events to engage followers.
+                        <p class="text-[0.75rem] text-indigo-50 leading-relaxed mb-4">
+                            Leading digital transformation in community communication. Building content strategies, managing social channels, and organizing creative virtual events.
                         </p>
                         <div class="flex flex-wrap gap-2">
                             <span class="text-[0.6rem] bg-indigo-800 px-2 py-1 rounded-md">Content Strategy</span>
@@ -378,15 +398,14 @@
                         </div>
                     </div>
 
-                    <div class="card-job border-2 border-indigo-100 !mb-0">
+                    <div class="card-job border-2 border-indigo-100 !mb-0 shadow-sm">
                         <h5 class="text-[0.9rem] font-bold text-indigo-700 mb-2">Marketing Automation & AI Lab</h5>
                         <p class="text-[0.75rem] text-slate-600 leading-relaxed mb-4">
-                            Independently researching and applying <strong>N8N & OpenClaw</strong> to automate sales funnels, building intelligent AI Chatbots, and optimizing data harvesting workflows.
+                            Independently researching and applying <strong>N8N & OpenClaw</strong> to automate sales funnels, building intelligent AI Chatbots.
                         </p>
                         <div class="flex flex-wrap gap-2">
                             <span class="skill-tag">N8N</span>
                             <span class="skill-tag">AI Agent</span>
-                            <span class="skill-tag">Data Scraping</span>
                             <span class="skill-tag">API Integration</span>
                         </div>
                     </div>
@@ -400,7 +419,7 @@
                 <span class="text-[0.7rem] text-indigo-600 font-bold uppercase tracking-wider"><i class="fab fa-github mr-2"></i> danthienphuc</span>
                 <span class="text-[0.7rem] text-indigo-600 font-bold uppercase tracking-wider"><i class="fab fa-linkedin mr-2"></i> in/danthienphuc</span>
             </div>
-            <p class="text-[0.6rem] text-slate-400 font-medium">Design Copyright © 2026 Mai Van Phuc</p>
+            <p class="text-[0.6rem] text-slate-400 font-medium">Design Copyright © 2026 Mai Van Phuc.</p>
         </footer>
     </div>
 
