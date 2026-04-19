@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Translation Merger (Dynamic)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar for better UX */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        .empty-input {
+            background-color: #fef2f2;
+            border-color: #fca5a5 !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b px-6 py-4 flex justify-between items-center z-10 shrink-0">
+        <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            <h1 class="text-xl font-bold text-gray-800">JSON Translation Merger</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center bg-gray-100 rounded-lg p-1">
+                <button id="btnSortOriginal" onclick="changeSort('original')" class="px-4 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-gray-900 transition-all">Thứ tự gốc</button>
+                <button id="btnSortAlpha" onclick="changeSort('alpha')" class="px-4 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900 transition-all">A-Z</button>
+            </div>
+            <button onclick="addNewFile()" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-200 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Thêm file
+            </button>
+            <button onclick="downloadAll()" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span id="download-btn-text">Tải xuống tất cả</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col p-6 gap-6 overflow-hidden">
+        
+        <!-- Input Section (Dynamic) -->
+        <div id="inputs-container" class="flex gap-6 overflow-x-auto pb-2 shrink-0 h-56 snap-x">
+            <!-- Panels will be injected here -->
+        </div>
+
+        <div class="flex justify-center shrink-0">
+            <button onclick="processMerge()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-full font-medium flex items-center gap-2 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"></path></svg>
+                Xử lý & Hợp nhất
+            </button>
+        </div>
+
+        <!-- Comparison Editor Section -->
+        <div class="flex-1 bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col overflow-hidden">
+            <div class="overflow-x-auto flex-1 flex flex-col">
+                <!-- Header Row -->
+                <div id="editor-header" class="grid gap-px bg-gray-200 border-b shrink-0 min-w-max">
+                    <!-- Headers injected here -->
+                </div>
+                
+                <!-- Scrollable Body -->
+                <div id="editor-container" class="flex-1 overflow-y-auto bg-gray-200 gap-px grid content-start min-w-max">
+                    <div class="col-span-full p-8 text-center text-gray-400 bg-white">
+                        Nhấn "Xử lý & Hợp nhất" để xem bảng so sánh
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Custom Alert Modal -->
+    <div id="alert-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 transform scale-95 transition-transform" id="alert-box">
+            <h3 class="text-lg font-bold text-red-600 mb-2 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Thông báo
+            </h3>
+            <p id="alert-message" class="text-gray-600 text-sm mb-6"></p>
+            <div class="flex justify-end">
+                <button onclick="closeAlert()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-colors">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let currentSort = 'original'; // 'original' or 'alpha'
+        let originalKeysList = [];
+        let parsedFilesInfo = []; // Array of { id, name, isBase }
+        let mergedData = {}; // Format: { "vi.json": { key1: val1, ... }, "en.json": ... }
+
+        // Default Data
+        const defaultFiles = [
+            {
+                id: 'file_' + Date.now() + '_1',
+                name: 'vi.json',
+                content: JSON.stringify({
+                    "about": "Về ứng dụng",
+                    "account": "Tài khoản",
+                    "account_balance": "Tài khoản ECO",
+                    "account_balance_subtitle": "Thanh toán bằng số dư tài khoản",
+                    "account_holder": "Chủ tài khoản:",
+                    "account_locked": "Tài khoản đã bị khóa",
+                    "account_not_found": "Tài khoản không tồn tại trong hệ thống",
+                    "account_number": "Số tài khoản:",
+                    "active": "Hoạt động",
+                    "add": "Thêm",
+                    "added_to_cart": "Đã thêm {name} vào giỏ hàng",
+                    "address": "Địa chỉ",
+                    "address_hint": "Nhập địa chỉ thường trú",
+                    "address_required": "Vui lòng nhập địa chỉ",
+                    "agree_terms_required": "Vui lòng đồng ý với điều khoản sử dụng",
+                    "all": "Tất cả",
+                    "yes": "Có",
+                    "no": "Không",
+                    "delete": "Xóa"
+                }, null, 2)
+            },
+            {
+                id: 'file_' + Date.now() + '_2',
+                name: 'en.json',
+                content: JSON.stringify({
+                    "about": "About",
+                    "account": "Account",
+                    "account_balance": "ECO account",
+                    "account_balance_subtitle": "Pay using account balance",
+                    "account_holder": "Account holder:",
+                    "account_locked": "Your account has been locked",
+                    "account_not_found": "We could not find an account with the provided identifier",
+                    "account_number": "Account number:",
+                    "add": "Add",
+                    "added_to_cart": "Added {name} to cart",
+                    "address": "Address",
+                    "address_hint": "Please enter address",
+                    "address_required": "Please enter address",
+                    "agree_terms_required": "Please agree to the terms of service",
+                    "all": "All",
+                    "allow_notifications": "Allow notifications",
+                    "amount": "Amount",
+                    "amount_hint": "0"
+                }, null, 2)
+            },
+            {
+                id: 'file_' + Date.now() + '_3',
+                name: 'zh.json',
+                content: JSON.stringify({
+                    "about": "关于",
+                    "account": "账户",
+                    "account_balance": "ECO 账户",
+                    "account_balance_subtitle": "使用账户余额支付",
+                    "account_holder": "账户持有人：",
+                    "account_locked": "您的账户已被锁定",
+                    "account_not_found": "未找到该账户",
+                    "account_number": "账号：",
+                    "active": "活跃",
+                    "add": "添加",
+                    "added_to_cart": "已将 {name} 添加到购物车",
+                    "address": "地址",
+                    "address_hint": "请输入地址",
+                    "address_required": "请输入地址",
+                    "agree_terms_required": "请同意使用条款",
+                    "all": "全部",
+                    "allow_notifications": "允许通知",
+                    "amount": "金额",
+                    "amount_hint": "0",
+                    "amount_must_be_positive": "金额必须大于 0"
+                }, null, 2)
+            }
+        ];
+
+        // UI Helpers
+        function showAlert(msg) {
+            document.getElementById('alert-message').innerText = msg;
+            const modal = document.getElementById('alert-modal');
+            const box = document.getElementById('alert-box');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                box.classList.remove('scale-95');
+                box.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeAlert() {
+            const modal = document.getElementById('alert-modal');
+            const box = document.getElementById('alert-box');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
+        }
+
+        function changeSort(mode) {
+            currentSort = mode;
+            
+            const btnOrig = document.getElementById('btnSortOriginal');
+            const btnAlpha = document.getElementById('btnSortAlpha');
+            
+            if (mode === 'original') {
+                btnOrig.className = "px-4 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-gray-900 transition-all";
+                btnAlpha.className = "px-4 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900 transition-all";
+            } else {
+                btnAlpha.className = "px-4 py-1.5 text-sm font-medium rounded-md bg-white shadow-sm text-gray-900 transition-all";
+                btnOrig.className = "px-4 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-900 transition-all";
+            }
+            
+            if (originalKeysList.length > 0) {
+                renderGrid();
+            }
+        }
+
+        // Dynamic File Input Management
+        function initInputs() {
+            const container = document.getElementById('inputs-container');
+            container.innerHTML = '';
+            defaultFiles.forEach((file, index) => {
+                addFilePanel(file.id, file.name, file.content, index === 0);
+            });
+            updateDownloadButtonText();
+        }
+
+        function addNewFile() {
+            const id = 'file_' + Date.now();
+            const count = document.querySelectorAll('.file-panel').length + 1;
+            addFilePanel(id, `lang_${count}.json`, '{\n  \n}', false);
+            updateDownloadButtonText();
+            
+            // Scroll to end
+            const container = document.getElementById('inputs-container');
+            setTimeout(() => {
+                container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+            }, 50);
+        }
+
+        function removeFilePanel(id) {
+            const panels = document.querySelectorAll('.file-panel');
+            if (panels.length <= 1) {
+                showAlert("Cần ít nhất 1 file để xử lý!");
+                return;
+            }
+            const panel = document.getElementById(id);
+            if (panel) {
+                panel.remove();
+                updateDownloadButtonText();
+            }
+        }
+
+        function addFilePanel(id, name, content, isBase) {
+            const container = document.getElementById('inputs-container');
+            
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'file-panel min-w-[320px] flex-1 flex flex-col h-full bg-white rounded-xl shadow-sm border border-gray-200 snap-center shrink-0 relative transition-all focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-400';
+            
+            div.innerHTML = `
+                <div class="px-3 py-2 border-b bg-gray-50/50 rounded-t-xl flex justify-between items-center group">
+                    <div class="flex items-center gap-2 flex-1">
+                        <input type="text" class="file-name text-sm font-medium text-gray-700 bg-transparent border-none outline-none focus:ring-1 focus:ring-blue-400 rounded px-1 w-full max-w-[150px]" value="${name}" placeholder="Tên file...">
+                        ${isBase ? '<span class="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-0.5 rounded">Gốc</span>' : ''}
+                    </div>
+                    ${!isBase ? `
+                    <button onclick="removeFilePanel('${id}')" class="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-md hover:bg-red-50" title="Xóa file này">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                    ` : ''}
+                </div>
+                <textarea class="file-content flex-1 p-3 text-sm font-mono focus:outline-none rounded-b-xl resize-none bg-transparent" spellcheck="false">${content}</textarea>
+            `;
+            container.appendChild(div);
+        }
+
+        function updateDownloadButtonText() {
+            const count = document.querySelectorAll('.file-panel').length;
+            document.getElementById('download-btn-text').textContent = `Tải xuống ${count} Files`;
+        }
+
+        // Processing Logic
+        function processMerge() {
+            const panels = document.querySelectorAll('.file-panel');
+            parsedFilesInfo = [];
+            mergedData = {};
+            const keysSet = new Set();
+
+            try {
+                // 1. Read & Parse all inputs
+                panels.forEach((panel, index) => {
+                    let name = panel.querySelector('.file-name').value.trim();
+                    if (!name) name = `file_${index + 1}.json`;
+                    // auto append .json if missing
+                    if (!name.endsWith('.json')) name += '.json';
+                    // ensure unique names
+                    if (parsedFilesInfo.some(f => f.name === name)) {
+                        name = name.replace('.json', `_${index}.json`);
+                    }
+
+                    const content = panel.querySelector('.file-content').value;
+                    const parsedObj = JSON.parse(content || '{}');
+
+                    parsedFilesInfo.push({ id: panel.id, name: name, isBase: index === 0 });
+                    mergedData[name] = parsedObj;
+
+                    // Add unique keys (maintains insertion order)
+                    Object.keys(parsedObj).forEach(k => keysSet.add(k));
+                });
+
+                originalKeysList = Array.from(keysSet);
+
+                // 2. Normalize Data (fill missing keys with empty strings)
+                parsedFilesInfo.forEach(fileInfo => {
+                    const currentObj = mergedData[fileInfo.name];
+                    const newObj = {};
+                    originalKeysList.forEach(key => {
+                        newObj[key] = currentObj.hasOwnProperty(key) ? currentObj[key] : "";
+                    });
+                    mergedData[fileInfo.name] = newObj; // replace with normalized obj
+                });
+
+                // 3. Render
+                renderGrid();
+                
+            } catch (error) {
+                showAlert("Lỗi cú pháp JSON. Vui lòng kiểm tra lại dữ liệu trong các ô nhập.\nChi tiết: " + error.message);
+            }
+        }
+
+        function renderGrid() {
+            const headerContainer = document.getElementById('editor-header');
+            const bodyContainer = document.getElementById('editor-container');
+            
+            headerContainer.innerHTML = '';
+            bodyContainer.innerHTML = '';
+
+            // Setup CSS Grid Template
+            const numFiles = parsedFilesInfo.length;
+            const gridTemplate = `minmax(250px, 1.5fr) repeat(${numFiles}, minmax(300px, 2fr))`;
+            
+            headerContainer.style.gridTemplateColumns = gridTemplate;
+            bodyContainer.style.gridTemplateColumns = gridTemplate;
+
+            // Render Header
+            const keyHeader = document.createElement('div');
+            keyHeader.className = 'bg-gray-100 p-3 font-semibold text-sm text-gray-700 sticky left-0 z-10 border-r border-gray-200';
+            keyHeader.textContent = 'JSON Key';
+            headerContainer.appendChild(keyHeader);
+
+            parsedFilesInfo.forEach(fileInfo => {
+                const head = document.createElement('div');
+                head.className = 'bg-gray-100 p-3 font-semibold text-sm text-gray-700 break-all';
+                head.innerHTML = `${fileInfo.name} ${fileInfo.isBase ? '<span class="text-[10px] font-normal text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded ml-1">Gốc</span>' : ''}`;
+                headerContainer.appendChild(head);
+            });
+
+            // Render Body
+            let keysToRender = [...originalKeysList];
+            if (currentSort === 'alpha') {
+                keysToRender.sort((a, b) => a.localeCompare(b));
+            }
+
+            keysToRender.forEach(key => {
+                // Key cell
+                const keyDiv = document.createElement('div');
+                keyDiv.className = 'bg-white p-3 text-sm font-mono text-gray-600 flex items-center border-r border-gray-100 break-all sticky left-0 z-10';
+                keyDiv.textContent = key;
+                bodyContainer.appendChild(keyDiv);
+
+                // Language cells
+                parsedFilesInfo.forEach(fileInfo => {
+                    const langDiv = document.createElement('div');
+                    langDiv.className = 'bg-white p-2 border-r border-gray-100 last:border-r-0';
+                    
+                    const fileName = fileInfo.name;
+                    const val = mergedData[fileName][key];
+                    
+                    const input = document.createElement('textarea');
+                    input.value = val;
+                    input.rows = 1;
+                    input.className = `w-full min-h-[36px] px-3 py-1.5 text-sm border rounded outline-none transition-colors resize-none overflow-hidden focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 ${val === "" ? 'empty-input border-red-300' : 'border-gray-200'}`;
+                    input.placeholder = "Trống...";
+                    
+                    // Auto-resize textarea logic
+                    input.style.height = 'auto';
+                    input.style.height = (input.scrollHeight <= 36 ? 36 : input.scrollHeight) + 'px';
+                    
+                    input.addEventListener('input', (e) => {
+                        // Update state
+                        mergedData[fileName][key] = e.target.value;
+                        
+                        // Handle Styling
+                        if (e.target.value.trim() !== "") {
+                            e.target.classList.remove('empty-input', 'border-red-300');
+                            e.target.classList.add('border-gray-200');
+                        } else {
+                            e.target.classList.add('empty-input', 'border-red-300');
+                            e.target.classList.remove('border-gray-200');
+                        }
+
+                        // Auto-resize
+                        e.target.style.height = 'auto';
+                        e.target.style.height = (e.target.scrollHeight) + 'px';
+                    });
+
+                    langDiv.appendChild(input);
+                    bodyContainer.appendChild(langDiv);
+                });
+            });
+            
+            // Scroll to top
+            bodyContainer.scrollTop = 0;
+        }
+
+        function downloadAll() {
+            if (originalKeysList.length === 0 || parsedFilesInfo.length === 0) {
+                showAlert("Vui lòng nhấn 'Xử lý & Hợp nhất' trước khi tải xuống.");
+                return;
+            }
+
+            // Prepare keys order
+            let keysToExport = [...originalKeysList];
+            if (currentSort === 'alpha') {
+                keysToExport.sort((a, b) => a.localeCompare(b));
+            }
+
+            // Export each file
+            parsedFilesInfo.forEach((fileInfo, index) => {
+                const fileName = fileInfo.name;
+                const exportName = fileName.replace('.json', '_merged.json');
+                const exportObj = {};
+                
+                keysToExport.forEach(key => {
+                    exportObj[key] = mergedData[fileName][key];
+                });
+
+                // Set small delays between downloads to prevent browser blocking multiple file downloads
+                setTimeout(() => {
+                    downloadJson(exportObj, exportName);
+                }, index * 300);
+            });
+        }
+
+        function downloadJson(obj, filename) {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", filename);
+            document.body.appendChild(downloadAnchorNode); 
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        // Init
+        window.onload = () => {
+            initInputs();
+            processMerge();
+        };
+    </script>
+</body>
+</html>
